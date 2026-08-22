@@ -1,0 +1,1700 @@
+<!-- 理财师工作台原型 v1.9 | 部署源 index.html | 由任务 workbuddy-201 生成于 2026-08-22 | 源文件: 理财师工作台原型_v1.9_20260821.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>理财师工作台 v1.9 · 高潜客户跟进开发引擎（使用说明：纯文本 HTML）</title>
+<!--
+╔══════════════════════════════════════════════════════════════════════╗
+║ 设计说明（v1.8 使用说明版, 2026-08-21 / 基于 v1.7 高潜跟进版）          ║
+║──────────────────────────────────────────────────────────────────────║
+║ 定位：高潜客户跟进开发引擎（非全功能 CRM）——对存量高潜客户做          ║
+║       「画像 → 事件触发 → 个性化话术 → 人工跟进 → 转化闭环」。         ║
+║                                                                      ║
+║ 信息架构（6 页, 沿用 v1.6 收敛结构, 不另起新页）：                     ║
+║   1. 首页·跟进工作台   潜客列表(状态)/今日提醒/临期事件/简明KPI/漏斗简览║
+║   2. 客户画像(重中之重) 画像要素六分类 + 来源可追溯 + 新增要素三入口    ║
+║                          ＋【新增】客户长期 Agent 状态面板(记忆库/长期目标/隔离边界) ║
+║   3. 事件/场景触发     生日/人生事件/产品到期/活动匹配 + 自动话术入口  ║
+║   4. 个性化话术        【升级】四步链路(生成草稿→合规检查→人批准→人工转发)+ need help 转人工 ║
+║                          ＋【新增】关系型经营目标维度(信任积累/情绪价值/专业服务/转化推进) ║
+║                          ＋【新增】话术标注"参考历史最优沟通"          ║
+║   5. 跟进记录          沟通历史时间线 + 关键节点"必须人工对接"标记     ║
+║                          ＋【新增】"我的经验库"入口 / 跟进可"沉淀为模板" ║
+║   6. 转化漏斗          潜客→跟进中→接近成交→开户→购买→投资           ║
+║                                                                      ║
+║ ★★★ v1.7 相对 v1.6 的变更点（P0×4, 视频分析建议落地）★★★             ║
+║ P0-1 客户画像 = "客户专属长期 Agent"视角                              ║
+║   · 画像页新增「客户长期 Agent 状态面板」：                            ║
+║     ① 记忆库 ＝ 画像字段 + 来源可追溯时间线(每条要素带来源/时间)       ║
+║     ② 长期目标 ＝ 开户/购买/投资 进度(由漏斗阶段驱动)                  ║
+║     ③ 隔离边界 ＝ 本地私有实例标注(对应"每个 Agent 自带虚拟机"的隔离思想, ║
+║                    以私有化部署达成, 非真开虚拟机)                      ║
+║   · 保留"新增画像要素"三个入口(截屏OCR/口述转述/手动录入)之一可模拟    ║
+║ P0-2 运营经验自学习自迭代                                            ║
+║   · 跟进页新增「我的经验库」入口: 跟进记录可"沉淀为模板"(模拟)         ║
+║   · 话术生成标注「参考历史最优沟通」(模拟文案)                        ║
+║ P0-3 "need help / 人在回路"硬性交互范式                               ║
+║   · 话术页四步链路可视化: 生成草稿→合规检查→人批准→人工转发          ║
+║     每步明确状态标识 + 「need help 转人工」按钮(模拟)                  ║
+║   · 页面显著标注「AI 仅后端辅助, 客户侧沟通必须人工」                  ║
+║ P0-4 关系型经营话术目标维度                                          ║
+║   · 话术生成增加目标维度选择(可多选): 信任积累/情绪价值/               ║
+║     专业服务/转化推进; 模拟生成时给出对应维度提示                      ║
+║                                                                      ║
+║ 未动：v1.6 的 6 大模块结构 / 浅色设计 / 合成数据标注 / 新手引导 /      ║
+║       3 入口录入 / 漏斗推进 / 事件触发。v1.6 原文件保留不动。          ║
+║                                                                      ║
+║ 标注"待用户确认"的取舍：                                               ║
+║  · 租户切换/多顾问已移除→个人私有化定位（文洁"运营经验属私有"）        ║
+║  · 试点口径：需求为 10 名存量高潜客户，演示造 8 名                    ║
+║                                                                      ║
+║ ★★★ v1.8 相对 v1.7 的变更点（融入功能说明入口）★★★                   ║
+║  · 新增第 7 个页面「使用说明（guide）」：核心概念速览/快速上手/功能地图/║
+║    合规红线/完整手册入口；与《理财师工作台功能说明与操作手册_v1.0》一致  ║
+║  · 首页顶部新增 tab 导航栏：🏠 跟进工作台 / 📖 使用说明，点击进入说明视图║
+║  · 左侧导航栏新增第 7 个 tab「📖 使用说明」（帮助分组），从任意页可进    ║
+║  · v1.7 全部 6 大模块结构 / 交互 / 浅色设计 / 合成数据标注 / 新手引导    ║
+║    一律保留，零丢失；仅新增上述入口与说明视图。v1.7 原文件保留不动。    ║
+║                                                                      ║
+║ ★★★ v1.9 相对 v1.8 的变更点（使用说明改为纯文本 HTML）★★★             ║
+║  · 「使用说明（guide）」tab 内容由交互式说明视图，重构为静态纯文本      ║
+║    排版（h2 / h3 / p / ul / ol / table），内容以《功能说明与操作手册    ║
+║    v1.0》为唯一来源，完整呈现 9 章：产品是什么 / 核心概念 / 功能地图 / ║
+║    模块操作 / 数据与合规 / 试点流程 / FAQ / 术语表 / 边界与免责。        ║
+║  · 说明区内移除全部交互：删除跳转按钮(onclick)、可点击功能地图、        ║
+║    折叠 / 标签切换 / 动态演示；整页可纵向滚动阅读（滚动为阅读行为）。  ║
+║  · 说明区样式沿用浅色设计，增强长文可读性（字号 / 行距 / 表格 / 代码块）。║
+║  · v1.8 全部 6 大模块 + 首页 tab 导航 + 左侧导航 + 新手引导一律保留，   ║
+║    零丢失；v1.8 原文件保留不动。                                       ║
+╚══════════════════════════════════════════════════════════════════════╝
+-->
+<style>
+:root{
+  --paper:#f3f6fb; --rail:#0d1d35; --rail2:#13284a; --cobalt:#265dcc; --cobalt-h:#18479f; --accent:#315efb;
+  --ink:#14213d; --muted:#5d6b82; --line:#dce3ed; --panel:#ffffff; --green:#0b7556; --red:#b33745; --yellow:#80500b; --yellow-bg:#fff7e7;
+  --purple:#6b3fa0;
+  --shadow:0 1px 3px rgba(13,29,53,.08),0 6px 18px rgba(13,29,53,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.55}
+button{font-family:inherit;cursor:pointer}
+/* ===== Shell ===== */
+.shell{display:grid;grid-template-columns:236px 1fr;height:100vh}
+.rail{background:var(--rail);color:#cdd8ec;display:flex;flex-direction:column;overflow:hidden}
+.brand{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brand .b1{color:#fff;font-size:15px;font-weight:700;letter-spacing:.3px}
+.brand .b2{color:#7e93b8;font-size:11px;margin-top:3px}
+.nav{flex:1;overflow-y:auto;padding:10px 8px}
+.nav .grp{margin-bottom:6px}
+.nav .gh{color:#6f86ad;font-size:10.5px;font-weight:600;letter-spacing:1px;padding:10px 12px 5px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:#cdd8ec;text-decoration:none;font-size:13px;transition:.15s;cursor:pointer}
+.nav a:hover{background:var(--rail2);color:#fff}
+.nav a.active{background:var(--cobalt);color:#fff;font-weight:600}
+.nav a .ic{width:18px;text-align:center;font-size:14px}
+.rail-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.07);font-size:11px;color:#6f86ad;line-height:1.6}
+/* ===== Topbar ===== */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:58px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 20px;flex-shrink:0}
+.topbar .crumb{font-size:13px;color:var(--muted)}
+.topbar .crumb b{color:var(--ink)}
+.topbar .sp{flex:1}
+.badge{font-size:11px;padding:4px 9px;border-radius:20px;background:#eaf3ff;color:var(--cobalt);border:1px solid #cfe0ff;font-weight:600}
+.badge.warn{background:var(--yellow-bg);color:var(--yellow);border-color:#f0d9a8}
+.btn{background:var(--cobalt);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;transition:.15s}
+.btn:hover{background:var(--cobalt-h)}
+.btn.ghost{background:#eef3fb;color:var(--cobalt);border:1px solid #d3e0f7}
+.btn.ghost:hover{background:#e2ecfb}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.green{background:var(--green)}
+.btn.green:hover{background:#085a44}
+.btn.danger{background:var(--red)}
+.btn.danger:hover{background:#92303c}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cobalt),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+/* ===== Content ===== */
+.content{flex:1;overflow-y:auto;padding:22px 26px 40px}
+.view-h{display:flex;align-items:flex-end;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.view-h h1{font-size:20px;font-weight:700}
+.view-h .sub{color:var(--muted);font-size:13px}
+.hint{font-size:12px;color:var(--muted);background:#eef4fb;border:1px dashed #b9cdec;border-radius:8px;padding:8px 12px;margin-bottom:16px;display:flex;gap:8px;align-items:flex-start}
+.hint .i{color:var(--cobalt);font-weight:700;flex-shrink:0}
+.grid{display:grid;gap:16px}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+.card h3{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 .tag{font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:10px;background:#eef3fb;color:var(--cobalt);margin-left:auto;white-space:nowrap}
+.kpi{display:flex;flex-direction:column;gap:4px}
+.kpi .n{font-size:26px;font-weight:800;color:var(--ink);line-height:1}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .d{font-size:11.5px;font-weight:600}
+.up{color:var(--green)} .down{color:var(--red)}
+.row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f0f3f8}
+.row:last-child{border-bottom:none}
+.pill{font-size:11px;padding:2px 9px;border-radius:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.p-green{background:#e4f3ec;color:var(--green)} .p-red{background:#fbe9ec;color:var(--red)}
+.p-yel{background:var(--yellow-bg);color:var(--yellow)} .p-gray{background:#eef1f5;color:var(--muted)}
+.p-blue{background:#e8f0fd;color:var(--cobalt)} .p-purple{background:#f0eaf8;color:var(--purple)}
+.bar{height:7px;border-radius:5px;background:#eef1f5;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:5px}
+.grp-title{font-size:13px;font-weight:700;color:var(--ink);margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+.grp-title .ln{flex:1;height:1px;background:var(--line)}
+.tabs{display:flex;gap:6px;background:#eef3fb;padding:4px;border-radius:10px;width:fit-content;margin-bottom:16px;flex-wrap:wrap}
+.tabs button{border:none;background:none;padding:7px 16px;border-radius:7px;font-size:13px;color:var(--muted);font-weight:600;cursor:pointer}
+.tabs button.on{background:#fff;color:var(--cobalt);box-shadow:var(--shadow)}
+.flt{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.flt button{border:1px solid var(--line);background:#fff;padding:5px 12px;border-radius:18px;font-size:12px;color:var(--muted);font-weight:600;cursor:pointer}
+.flt button.on{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.foot{font-size:11px;color:var(--muted);text-align:center;margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.legend .li{display:flex;align-items:center;gap:6px}
+.legend .sw{width:11px;height:11px;border-radius:3px}
+.empty{text-align:center;color:var(--muted);padding:26px;font-size:13px}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--cobalt)}
+/* ===== 客户卡片（首页潜客列表） ===== */
+.clist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.cc{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel);cursor:pointer;transition:.15s}
+.cc:hover{border-color:var(--cobalt);box-shadow:var(--shadow)}
+.cc .top{display:flex;align-items:center;gap:10px}
+.cc .nm{font-weight:700;font-size:15px}
+.cc .meta{font-size:12px;color:var(--muted);margin-top:6px}
+.cc .chips{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.cc .next{font-size:11.5px;color:var(--cobalt);font-weight:600;margin-top:8px;background:#eef4fb;border-radius:7px;padding:5px 9px}
+/* ===== 画像要素 ===== */
+.pe-cat{margin-bottom:16px}
+.pe-cat .ph{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pe-cat .ph .ci{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:700;flex-shrink:0}
+.pe-cat .ph .ct{font-weight:700;font-size:13.5px}
+.pe-cat .ph .cn{font-size:11.5px;color:var(--muted);margin-left:auto}
+.pe{border:1px solid var(--line);border-radius:10px;background:#fbfcfe;padding:10px 12px;margin-bottom:7px;display:flex;gap:10px;align-items:flex-start}
+.pe .tx{flex:1;font-size:13px}
+.pe .tx .q{color:var(--muted);font-size:11.5px;margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.src-badge{font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:8px;color:#fff}
+.mini-bar{width:44px;height:5px;border-radius:3px;background:#eef1f5;overflow:hidden;display:inline-block;vertical-align:middle}
+.mini-bar>i{display:block;height:100%}
+/* ===== 漏斗 ===== */
+.funnel{display:flex;gap:4px;margin-top:8px}
+.fseg{flex:1;border-radius:8px;padding:10px 6px 8px;text-align:center;cursor:pointer;transition:.15s;min-width:0}
+.fseg:hover{filter:brightness(1.08)}
+.fseg .fnum{font-size:19px;font-weight:800;color:#fff}
+.fseg .flbl{font-size:10.5px;color:#fff;opacity:.92;margin-top:2px}
+.fstage-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f3f8;flex-wrap:wrap}
+.fstage-row:last-child{border-bottom:none}
+.fdots{display:flex;gap:3px}
+.fdots .fd{width:15px;height:15px;border-radius:50%;background:#e4eaf3;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.fdots .fd.on{background:var(--cobalt)}
+.fdots .fd.now{border:2px solid var(--ink)}
+/* ===== 事件 / 活动 ===== */
+.ev-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}
+.ev-card .ic{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;font-weight:700}
+.ev-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f4f8}
+.ev-item:last-child{border-bottom:none}
+.ev-item .dot{width:9px;height:9px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.act-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel);margin-bottom:12px}
+.act-card .ah{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.matched{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+/* ===== 话术 / 合规 ===== */
+.script-draft{background:#f4f7fc;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.7;color:#33425e;white-space:pre-wrap;margin-top:10px}
+.comply{background:#f3faf7;border:1px solid #cfe7dd;border-radius:10px;padding:12px 14px;margin-top:10px}
+.comply .cl{display:flex;gap:8px;align-items:flex-start;font-size:12px;padding:3px 0}
+.comply .ck{width:17px;height:17px;border-radius:5px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px}
+.ap{border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:11px;background:#fbfcfe}
+.ap .h{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.ap .acts{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.chain{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:10px 0 4px}
+.chain .step{display:flex;align-items:center;gap:7px;background:#f4f7fc;border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:12px}
+.chain .step .dot{width:8px;height:8px;border-radius:50%;background:var(--cobalt)}
+.chain .arr{color:var(--muted);padding:0 8px}
+/* ===== P0-3 四步链路（need help 转人工） ===== */
+.banner{background:linear-gradient(135deg,#b33745,#8a2a36);color:#fff;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:16px;line-height:1.5}
+.banner .bi{font-size:18px}
+.chain4{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:6px 0 4px}
+.c4{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfcfe;min-width:150px;flex:1;display:flex;flex-direction:column;gap:9px}
+.c4.done{border-color:#bfe3d3;background:#f1faf5}
+.c4.now{border-color:var(--cobalt);box-shadow:0 0 0 2px rgba(38,93,204,.12)}
+.c4top{display:flex;align-items:center;gap:7px;font-size:12.5px}
+.c4num{width:20px;height:20px;border-radius:50%;background:var(--cobalt);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.c4.done .c4num{background:var(--green)}
+.c4.now .c4num{background:var(--yellow)}
+.c4arr{color:var(--muted);padding:0 6px;align-self:center}
+.dimset{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.dimset label{display:flex;align-items:center;gap:5px;font-size:12.5px;background:#f4f7fc;border:1px solid var(--line);border-radius:18px;padding:5px 12px;cursor:pointer;font-weight:600;color:var(--ink)}
+.dimset input{accent-color:var(--cobalt)}
+.refbadge{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;background:#f0eaf8;color:var(--purple)}
+/* ===== 时间线（跟进记录） ===== */
+.timeline{position:relative;padding-left:22px}
+.timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:#e2e9f4}
+.tl-item{position:relative;padding:9px 0 9px 12px;border-bottom:1px solid #f3f5f9}
+.tl-item:last-child{border-bottom:none}
+.tl-item .tdot{position:absolute;left:-22px;top:14px;width:12px;height:12px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.tl-item .th{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tl-item .ts{font-size:11px;color:var(--muted)}
+.keynode{margin-top:9px;background:var(--yellow-bg);border:1px solid #f0d9a8;border-radius:8px;padding:7px 10px;font-size:12px;color:var(--yellow);font-weight:600}
+/* ===== 表单 ===== */
+.frm{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.frm label{font-size:12px;font-weight:600;color:var(--muted)}
+.frm input,.frm select,.frm textarea{font-family:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:8px 11px;background:#fff;color:var(--ink);width:100%}
+.frm textarea{resize:vertical;min-height:74px}
+.frm .frow{display:flex;gap:10px;flex-wrap:wrap}
+.frm .frow>div{flex:1;min-width:120px}
+/* ===== toast / modal ===== */
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;z-index:90;box-shadow:0 8px 30px rgba(0,0,0,.25);max-width:80vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.mask{position:fixed;inset:0;background:rgba(13,29,53,.55);z-index:80;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:16px;width:600px;max-width:94vw;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal .mh{padding:20px 26px 4px}
+.modal .mh .mt{font-size:18px;font-weight:800}
+.modal .mh .ms{color:var(--muted);font-size:12.5px;margin-top:4px}
+.modal .mb{padding:14px 26px;overflow-y:auto}
+.modal .mf{padding:13px 26px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+.dropzone{border:2px dashed #b9cdec;border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:13px;cursor:pointer;transition:.15s;background:#f8fbfe}
+.dropzone:hover{border-color:var(--cobalt);color:var(--cobalt);background:#f0f6ff}
+.dropzone .dz-ic{font-size:26px;margin-bottom:6px}
+.cand{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;display:flex;gap:9px;align-items:flex-start;background:#fbfcfe}
+.cand input{margin-top:3px}
+.cand .ct{font-size:13px;flex:1}
+.cand .cm{font-size:11px;color:var(--muted);margin-top:2px}
+.steps{display:flex;gap:8px;margin-bottom:16px}
+.steps .s{flex:1;height:5px;border-radius:3px;background:#e4eaf3}
+.steps .s.on{background:var(--cobalt)}
+.wstep .wd{font-size:13px;color:var(--muted);line-height:1.7}
+.wstep .wd b{color:var(--ink)}
+.agent-note{border-left:3px solid var(--purple);background:#f6f3fb;border-radius:8px;padding:8px 12px;font-size:12px;color:#5a4a78;line-height:1.6}
+/* ===== 响应式 ===== */
+@media (max-width:920px){
+  .shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .rail{flex-direction:row;align-items:center;overflow-x:auto}
+  .brand{padding:10px 14px;border-bottom:none;border-right:1px solid rgba(255,255,255,.07);white-space:nowrap}
+  .nav{display:flex;gap:4px;padding:8px}
+  .nav .grp{display:flex;margin:0;gap:4px}
+  .nav .gh{display:none}
+  .nav a{white-space:nowrap;padding:7px 10px;font-size:12px}
+  .rail-foot{display:none}
+  .cols-4{grid-template-columns:repeat(2,1fr)}
+  .cols-3{grid-template-columns:1fr}
+  .cols-2{grid-template-columns:1fr}
+  .clist{grid-template-columns:1fr}
+  .content{padding:16px 14px 30px}
+  .topbar{padding:0 12px}
+}
+/* ===== 使用说明 · 纯文本 HTML 阅读区（v1.9 新增） ===== */
+.doc{max-width:940px}
+.doc h2{font-size:18px;font-weight:700;margin:30px 0 14px;padding:0 0 9px;border-bottom:2px solid var(--line);color:var(--ink)}
+.doc h2:first-of-type{margin-top:6px}
+.doc h3{font-size:15px;font-weight:700;margin:20px 0 9px;color:var(--cobalt)}
+.doc p{font-size:13.5px;line-height:1.85;margin:9px 0;color:#33425e}
+.doc ul,.doc ol{margin:9px 0 9px 24px;font-size:13.5px;line-height:1.85;color:#33425e}
+.doc li{margin:5px 0}
+.doc table{border-collapse:collapse;width:100%;margin:13px 0;font-size:13px;background:#fff;box-shadow:var(--shadow)}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.65}
+.doc th{background:#eef3fb;color:var(--ink);font-weight:700}
+.doc tr:nth-child(even) td{background:#f7f9fc}
+.doc code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#eef3fb;color:var(--cobalt);padding:1px 5px;border-radius:5px}
+.doc pre{background:#f4f7fc;border:1px solid var(--line);border-radius:8px;padding:11px 14px;font-size:12.5px;line-height:1.7;color:#33425e;overflow-x:auto;white-space:pre}
+.doc .sec{border-left:3px solid var(--cobalt);background:#f6f9fe;border-radius:8px;padding:11px 15px;margin:12px 0;font-size:13px;color:#33425e;line-height:1.8}
+.doc .sec.red{border-left-color:var(--red);background:#fdeff0}
+.doc .toc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:14px 0;font-size:13px;line-height:2;color:var(--muted)}
+.doc .toc b{color:var(--ink)}
+.doc .note{font-size:12.5px;color:var(--muted);line-height:1.8;background:#fbfcfe;border:1px dashed var(--line);border-radius:8px;padding:9px 13px;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <div class="b1">理财师工作台</div>
+      <div class="b2">v1.8 · 高潜客户跟进开发</div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">演示用合成数据 · 开箱即用<br>无后端 · 数据仅存个人设备<br>运营经验属使用者私有</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb" id="crumb">首页</div>
+      <div class="sp"></div>
+      <span class="badge">● 合成数据演示</span>
+      <span class="badge warn">个人版 · 私有化</span>
+      <button class="btn ghost sm" onclick="openWelcome()">新手引导</button>
+      <div class="avatar" title="文洁 · 财富顾问">文</div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div id="modalHost"></div>
+
+<script>
+/* =====================================================================
+ * v1.7 高潜客户跟进开发引擎 · 纯前端 mock（合成数据）
+ * ===================================================================*/
+/* ---------- 常量 ---------- */
+const CATS = ["投资偏好","风险偏好","私人信息","人生事件","兴趣","驱动类型"];
+const CAT_ICON = {"投资偏好":"💰","风险偏好":"🛡","私人信息":"🔑","人生事件":"🎭","兴趣":"🎯","驱动类型":"🧭"};
+const CAT_COLOR = {"投资偏好":"#265dcc","风险偏好":"#0b7556","私人信息":"#6b3fa0","人生事件":"#b33745","兴趣":"#80500b","驱动类型":"#315efb"};
+const SRC_COLOR = {"聊天记录":"#265dcc","客户经理录入":"#0b7556","活动":"#6b3fa0"};
+const STAGES = ["潜客","跟进中","接近成交","开户","购买","投资"];
+const STAGE_COLOR = ["#9aa7bd","#5d6b82","#265dcc","#315efb","#0b7556","#6b3fa0"];
+const STATUS_OF = i => i<=0?"待跟进" : i===1?"跟进中" : i===2?"接近成交" : "已转化";
+const STATUS_PILL = {"待跟进":"p-gray","跟进中":"p-blue","接近成交":"p-yel","已转化":"p-green"};
+const SCENES = ["产品到期重配","人生事件关怀","活动邀约","定期跟进"];
+
+/* ---------- 客户（8 名试点·合成数据；需求口径为 10 名，见设计说明） ---------- */
+function cl(id,name,title,amount,funnel,tags,profile,touches,next){
+  return {id,name,title,amount,funnel,tags,profile,touches,next};
+}
+const CLIENTS = [
+  cl("c1","王总","制造企业主 · 8,600万",8600,2,["企业主","家族信托","稳健","高净值"],
+    [
+      {cat:"投资偏好",text:"偏好稳健固收类；去年配的固收A快到期，主动问「是否还能延续同策略」",src:"聊天记录",time:"2026-08-20"},
+      {cat:"投资偏好",text:"企业分红到账约 1,200 万，考虑再投资，倾向锁利型产品",src:"客户经理录入",time:"2026-08-12"},
+      {cat:"风险偏好",text:"原话「钱不求多，稳最重要」，说过「波动大了睡不着觉」",src:"聊天记录",time:"2026-07-15"},
+      {cat:"私人信息",text:"两个女儿，大女儿在美国读研；家里养了一只金毛叫 Lucky",src:"聊天记录",time:"2026-07-02"},
+      {cat:"人生事件",text:"9/15 固收A到期前，计划安排一次面谈确认续配方案",src:"客户经理录入",time:"2026-08-18"},
+      {cat:"兴趣",text:"每周末打高尔夫；关注企业家论坛与制造业政策",src:"聊天记录",time:"2026-06-28"},
+      {cat:"驱动类型",text:"信任驱动型：只跟熟人合作，看重长期陪伴与确定性",src:"聊天记录",time:"2026-06-20"}
+    ],
+    [
+      {date:"2026-08-12",ch:"面谈",type:"方案沟通",summary:"谈企业分红再投资与传承架构",result:"认可，待出方案"},
+      {date:"2026-07-20",ch:"电话",type:"到期提醒",summary:"固收A 下月到期，沟通重配",result:"接受同风险新发"}
+    ],
+    "固收A 9/15 到期 → 生成重配话术"),
+  cl("c2","李姐","上市公司高管 · 3,200万",3200,1,["高管","定投","教育金","高净值"],
+    [
+      {cat:"投资偏好",text:"微50定投每月 30 万，已定投 14 个月；固收理财C 12/1 到期",src:"客户经理录入",time:"2026-08-05"},
+      {cat:"投资偏好",text:"明确说「孩子的教育金不能有闪失」",src:"聊天记录",time:"2026-07-18"},
+      {cat:"风险偏好",text:"「回撤超过 20% 会焦虑」，当前风险承受评估为稳健",src:"聊天记录",time:"2026-06-30"},
+      {cat:"私人信息",text:"一儿一女都在国际学校；老公是三甲医院医生，值夜班辛苦",src:"聊天记录",time:"2026-07-25"},
+      {cat:"人生事件",text:"明年 9 月大儿子出国读高中，教育金规划进入关键期",src:"聊天记录",time:"2026-08-08"},
+      {cat:"兴趣",text:"每周两次瑜伽；周末带孩子亲子露营",src:"聊天记录",time:"2026-06-12"},
+      {cat:"驱动类型",text:"规划驱动型：喜欢看到清晰的书面计划再决策",src:"客户经理录入",time:"2026-06-15"}
+    ],
+    [
+      {date:"2026-08-05",ch:"微信",type:"关怀",summary:"暑期亲子活动建议",result:"好评"},
+      {date:"2026-06-30",ch:"企微",type:"市场点评",summary:"半年度复盘发送",result:"已读"}
+    ],
+    "8/28 微50定投月度回顾 → 提前准备"),
+  cl("c3","张姐","退休教师 · 680万",680,0,["退休","稳健","年金"],
+    [
+      {cat:"投资偏好",text:"持仓以国债、存款、年金险为主；明确「不接受任何波动」",src:"客户经理录入",time:"2026-07-10"},
+      {cat:"风险偏好",text:"保守型：理财只买 R1/R2，本金第一",src:"聊天记录",time:"2026-06-22"},
+      {cat:"私人信息",text:"老伴已退休；女儿在银行工作（同业）；养了绿植阳台摆满",src:"聊天记录",time:"2026-07-30"},
+      {cat:"人生事件",text:"8/1 生日已过（已手写信祝福）；明年 4 月金婚纪念，可提前筹备",src:"聊天记录",time:"2026-08-02"},
+      {cat:"兴趣",text:"每周三社区书法班；晚上广场舞；爱听养老讲座",src:"聊天记录",time:"2026-07-08"},
+      {cat:"驱动类型",text:"安全感驱动型：认同「慢就是稳」，最反感推销式话术",src:"客户经理录入",time:"2026-07-05"}
+    ],
+    [
+      {date:"2026-08-01",ch:"电话",type:"生日关怀",summary:"生日专属问候",result:"感动，回手写信"},
+      {date:"2026-07-10",ch:"微信",type:"配置确认",summary:"固收占比确认",result:"满意"}
+    ],
+    "9/05 月度触达（下周）→ 老年稳健主题"),
+  cl("c4","陈先生","科创创业者 · 1,500万",1500,1,["创业者","成长","科创"],
+    [
+      {cat:"投资偏好",text:"偏好成长型与科创主题，愿意承担波动换回报；刚建仓科创主题F",src:"客户经理录入",time:"2026-07-28"},
+      {cat:"风险偏好",text:"意愿成长、能力平衡（公司现金流波动大），取低值为平衡",src:"客户经理录入",time:"2026-08-15"},
+      {cat:"私人信息",text:"与联合创始人搭档；二孩；常出差，喜欢高铁上处理事情",src:"聊天记录",time:"2026-07-14"},
+      {cat:"人生事件",text:"近期 B 轮融资谈判中，情绪与资金安排波动较大",src:"聊天记录",time:"2026-08-16"},
+      {cat:"兴趣",text:"科技产品控；每年跑两场马拉松",src:"聊天记录",time:"2026-06-18"},
+      {cat:"驱动类型",text:"成长驱动型：看重收益弹性，反感「一板一眼」的保守建议",src:"客户经理录入",time:"2026-07-20"}
+    ],
+    [
+      {date:"2026-08-15",ch:"微信",type:"KYC",summary:"首次 KYC，风险测评待补",result:"约面谈"}
+    ],
+    "B轮融资进展 → 非产品话题关怀"),
+  cl("c5","赵总","跨境外贸 · 7,200万",7200,2,["跨境","企业主","慈善","高净值"],
+    [
+      {cat:"投资偏好",text:"多币种资产，关注跨境配置与汇率；「国内稳健、海外分散」",src:"聊天记录",time:"2026-08-10"},
+      {cat:"风险偏好",text:"平衡型：能接受一定波动，但大额资金必须留安全垫",src:"客户经理录入",time:"2026-07-22"},
+      {cat:"私人信息",text:"两个孩子在国际学校；常驻义乌与深圳两地；英语流利",src:"聊天记录",time:"2026-07-16"},
+      {cat:"人生事件",text:"跨境税务架构筹划中，关注家族财富长期安排",src:"客户经理录入",time:"2026-08-10"},
+      {cat:"兴趣",text:"慈善捐赠（教育方向）；喜欢收藏当代艺术品",src:"聊天记录",time:"2026-06-25"},
+      {cat:"驱动类型",text:"价值驱动型：认可专业与长期主义，反感短期炒作",src:"客户经理录入",time:"2026-06-30"}
+    ],
+    [
+      {date:"2026-08-10",ch:"面谈",type:"规划沟通",summary:"跨境税务架构沟通",result:"待方案"}
+    ],
+    "8/26 季度审查预约 → 跨境税务专题"),
+  cl("c6","孙女士","三甲医院医生 · 2,600万",2600,0,["医生","稳健","单身"],
+    [
+      {cat:"投资偏好",text:"以稳健固收为主，偏好「省心、不用盯盘」的理财",src:"客户经理录入",time:"2026-07-12"},
+      {cat:"风险偏好",text:"稳健型：对理财的流动性有要求，可能随时要取用",src:"聊天记录",time:"2026-07-04"},
+      {cat:"私人信息",text:"单身，养了一只布偶猫叫团子；值夜班多，睡眠浅",src:"聊天记录",time:"2026-06-29"},
+      {cat:"人生事件",text:"刚升主任医师，收入提升，考虑系统性配置",src:"聊天记录",time:"2026-08-12"},
+      {cat:"兴趣",text:"周末烘焙与短途旅行；关注健康类内容",src:"聊天记录",time:"2026-06-20"},
+      {cat:"驱动类型",text:"专业信任型：只信持证的专业建议，反感模糊承诺",src:"客户经理录入",time:"2026-07-08"}
+    ],
+    [
+      {date:"2026-08-08",ch:"微信",type:"关怀",summary:"职业晋升恭喜",result:"好感提升"}
+    ],
+    "晋升后配置咨询 → 首约面谈"),
+  cl("c7","周总","医疗集团董事长 · 1.2亿",12000,5,["企业主","家族信托","高净值","私募"],
+    [
+      {cat:"投资偏好",text:"本周开户并购买医疗健康主题私募（合格投资者确认已完成）",src:"客户经理录入",time:"2026-08-19"},
+      {cat:"风险偏好",text:"平衡偏成长：大额资金分仓管理，单笔不超过 30%",src:"聊天记录",time:"2026-07-06"},
+      {cat:"私人信息",text:"三个孩子；集团涉医疗+养老；本人话少但决策快",src:"聊天记录",time:"2026-06-16"},
+      {cat:"人生事件",text:"考虑设立家族信托安排二代接班与慈善基金",src:"客户经理录入",time:"2026-08-05"},
+      {cat:"驱动类型",text:"效率驱动型：最烦冗长汇报，给结论+数据即可",src:"客户经理录入",time:"2026-06-24"}
+    ],
+    [
+      {date:"2026-08-19",ch:"面谈",type:"开户成交",summary:"完成开户 + 私募购买，合格投资者确认",result:"已转化·移交公司系统"},
+      {date:"2026-08-02",ch:"微信",type:"产品沟通",summary:"医疗健康主题私募深度沟通",result:"认可"}
+    ],
+    "已转化 → 移交公司系统（不在本工具跟进）"),
+  cl("c8","吴女士","电商品牌创始人 · 4,500万",4500,3,["创业者","稳健","新经济"],
+    [
+      {cat:"投资偏好",text:"本周完成开户，正配置稳健理财+少量指数；风格偏长期",src:"客户经理录入",time:"2026-08-20"},
+      {cat:"风险偏好",text:"稳健型：品牌现金流波动大，个人投资求稳",src:"聊天记录",time:"2026-07-19"},
+      {cat:"私人信息",text:"两个娃；平时忙大促，双十一前后几乎失联",src:"聊天记录",time:"2026-07-11"},
+      {cat:"人生事件",text:"公司完成新一轮融资，个人财富进入可规划阶段",src:"聊天记录",time:"2026-08-06"},
+      {cat:"驱动类型",text:"结果驱动型：以「能不能达到目标」为唯一判断",src:"客户经理录入",time:"2026-07-15"}
+    ],
+    [
+      {date:"2026-08-20",ch:"线上",type:"开户",summary:"完成开户，配置方案沟通中",result:"开户·待配置"}
+    ],
+    "开户后配置方案 → 跟进购买"),
+];
+
+/* ---------- 临期/触发事件（合成） ---------- */
+const EVENTS = [
+  {id:1,clientId:"c1",type:"产品到期",title:"稳健固收A 9/15 到期（T-25）",detail:"生成到期重配话术，确认续配意向",due:"今天"},
+  {id:2,clientId:"c2",type:"产品周期",title:"微50定投 8/28 月度回顾",detail:"提前准备当月定投表现与市场短评",due:"7 天后"},
+  {id:3,clientId:"c5",type:"配置审查",title:"8/26 季度审查预约",detail:"跨境税务专题内容+组合审查",due:"5 天后"},
+  {id:4,clientId:"c4",type:"人生事件",title:"B 轮融资谈判进展",detail:"以朋友身份问候，非产品话题",due:"今天"},
+  {id:5,clientId:"c3",type:"人生事件",title:"明年金婚纪念（2027-04）",detail:"可提前筹备惊喜，建立情感连接",due:"长期"},
+  {id:6,clientId:"c2",type:"生日",title:"李姐生日 9/12",detail:"提前一周备礼，非群发问候",due:"22 天后"},
+  {id:7,clientId:"c1",type:"活动匹配",title:"8/30 高净值客户答谢晚宴",detail:"匹配企业主/高净值画像客户，生成专属邀约",due:"9 天后"},
+  {id:8,clientId:"c5",type:"活动匹配",title:"9/05 跨境税务专题沙龙",detail:"匹配跨境/企业主画像客户，生成专属邀约",due:"15 天后"}
+];
+const ACTIVITIES = [
+  {id:"a1",name:"高净值客户答谢晚宴",date:"8/30",tags:["企业主","高净值","稳健","家族信托"],desc:"闭门晚宴，含税务/传承主题分享",matched:["c1","c5","c7","c8"]},
+  {id:"a2",name:"跨境税务专题沙龙",date:"9/05",tags:["跨境","企业主","高净值"],desc:"跨境配置与税务架构专题",matched:["c5","c1"]},
+  {id:"a3",name:"稳健理财新品路演",date:"9/12",tags:["稳健","固收","退休","医生"],desc:"同风险锁利新品说明会",matched:["c3","c6","c2","c8"]}
+];
+
+/* ---------- 话术（人在回路 · 合成） ---------- */
+let SCRIPTS = [
+  {id:901,clientId:"c1",scene:"产品到期重配",status:"pending",ts:"08-21 09:15",
+   draft:"王总，您去年配置的稳健固收A将于9月15日到期。结合当前利率下行的环境，我按您一贯的稳健偏好，准备了两只同风险等级（R2）、锁利更优的产品方案，需要我把详情发给您吗？"},
+  {id:900,clientId:"c5",scene:"活动邀约",status:"forwarded",ts:"08-20 15:02",
+   draft:"赵总，9月5日有一场跨境税务专题闭门沙龙，主讲跨境配置与税务架构，和您最近关注的方向很契合。席位有限，需要我为您预留一个吗？"}
+];
+
+/* ---------- 我的经验库（P0-2 · 运营经验自学习自迭代 · 合成） ---------- */
+let TEMPLATES = [
+  {id:1,cat:"信任积累",title:"面谈开场·不聊产品先聊人",note:"先问候近况与在意的人/事，3 分钟不提产品，建立安全感。",use:7},
+  {id:2,cat:"专业服务",title:"固收到期·同策略续配话术",note:"基于稳健偏好给同风险(R2)锁利方案，附利率下行背景说明。",use:5},
+  {id:3,cat:"情绪价值",title:"生日/人生事件·非群发专属关怀",note:"提前一周备礼，引用客户提过的家人/兴趣，体现被记住。",use:4}
+];
+let tplSeq = 10;
+
+/* ---------- 全局状态 ---------- */
+let view = "home";
+let selClient = "c1";
+let peTab = "ocr";
+let remindTab = "all";   // 首页客户列表状态筛选
+let evTab = "all";       // 事件页事件类型筛选
+
+/* ---------- 工具 ---------- */
+function byId(id){return CLIENTS.find(c=>c.id===id);}
+function nowTs(){const d=new Date();return String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function toast(m){const el=document.getElementById("toast");el.textContent=m;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),2400);}
+function esc(s){return (s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function srcPill(s){return `<span class="src-badge" style="background:${SRC_COLOR[s]||"#5d6b82"}">${s}</span>`;}
+function catPill(c){return `<span class="pill" style="background:${CAT_COLOR[c]}1a;color:${CAT_COLOR[c]}">${CAT_ICON[c]} ${c}</span>`;}
+
+/* ---------- 导航 ---------- */
+const NAV = [
+  {grp:"跟进工作台", items:[{id:"home",ic:"🏠",label:"首页 · 工作台"}]},
+  {grp:"高潜客户跟进", items:[
+    {id:"profile",ic:"👤",label:"客户画像"},
+    {id:"events",ic:"⏰",label:"事件 / 场景触发"},
+    {id:"scripts",ic:"💬",label:"个性化话术"},
+    {id:"followup",ic:"📋",label:"跟进记录"},
+    {id:"funnel",ic:"🔻",label:"转化漏斗"}
+  ]},
+  {grp:"帮助", items:[
+    {id:"guide",ic:"📖",label:"使用说明"}
+  ]}
+];
+function renderNav(){
+  const cur=view;
+  let h="";
+  NAV.forEach(g=>{
+    h+=`<div class="grp"><div class="gh">${g.grp}</div>`;
+    g.items.forEach(it=>{
+      h+=`<a class="${cur===it.id?'active':''}" onclick="go('${it.id}')"><span class="ic">${it.ic}</span>${it.label}</a>`;
+    });
+    h+=`</div>`;
+  });
+  document.getElementById("nav").innerHTML=h;
+}
+function go(v){
+  view=v;
+  const crumb={home:"首页 · 跟进工作台",profile:"客户画像",events:"事件 / 场景触发",scripts:"个性化话术",followup:"跟进记录",funnel:"转化漏斗",guide:"使用说明"}[v]||"";
+  document.getElementById("crumb").innerHTML=`<b>${crumb}</b>`;
+  renderNav();
+  render();
+}
+
+/* ---------- 渲染调度 ---------- */
+function render(){
+  const c=document.getElementById("content");
+  let h="";
+  if(view==="home")h=renderHome();
+  else if(view==="profile")h=renderProfile();
+  else if(view==="events")h=renderEvents();
+  else if(view==="scripts")h=renderScripts();
+  else if(view==="followup")h=renderFollowup();
+  else if(view==="funnel")h=renderFunnel();
+  else if(view==="guide")h=renderGuide();
+  c.innerHTML=h;
+}
+
+/* ===================== 首页 · 跟进工作台 ===================== */
+function funnelSegs(clickable){
+  const counts=STAGES.map((_,i)=>CLIENTS.filter(c=>c.funnel===i).length);
+  return `<div class="funnel">
+    ${STAGES.map((s,i)=>`<div class="fseg" style="background:${STAGE_COLOR[i]}" ${clickable?'onclick="go(\'funnel\')"':''} title="点击查看转化漏斗">
+      <div class="fnum">${counts[i]}</div><div class="flbl">${s}</div>
+    </div>`).join("")}
+  </div>`;
+}
+function renderHome(){
+  const total=CLIENTS.length;
+  const ing=CLIENTS.filter(c=>c.funnel===1).length;
+  const converted=CLIENTS.filter(c=>c.funnel>=3).length;
+  const pendScripts=SCRIPTS.filter(s=>s.status==="pending").length;
+  const todayEvents=EVENTS.filter(e=>e.due==="今天");
+  const remindList=remindTab==="all"?EVENTS:EVENTS.filter(e=>e.type===remindTab);
+  return `
+  <div class="tabs" style="margin-bottom:18px">
+    <button class="${view==='home'?'on':''}" onclick="go('home')">🏠 跟进工作台</button>
+    <button class="${view==='guide'?'on':''}" onclick="go('guide')">📖 使用说明</button>
+  </div>
+  <div class="view-h"><h1>首页 · 跟进工作台</h1><span class="sub">高潜客户跟进开发引擎 · 一句话：这个工具就是帮你跟进高潜客户</span></div>
+  <div class="hint"><span class="i">💡</span><div>本工具只做一件事：<b>高潜客户跟进开发</b>。已成交客户移交公司系统管理（文洁口径）。流程闭环：<b>画像（个微零散信息挖掘）→ 事件触发 → 个性化话术 → 人工跟进 → 转化</b>。AI 只做后端，信任建立与成交关键节点必须人工。<b>第一次用？点上方「📖 使用说明」tab，三分钟上手。</b></div></div>
+  <div class="grid cols-4">
+    <div class="card"><div class="kpi"><div class="n">${total}</div><div class="l">高潜客户</div><div class="d up">试点口径 10 名 · 演示 ${total} 名</div></div></div>
+    <div class="card"><div class="kpi"><div class="n">${ing}</div><div class="l">跟进中</div><div class="d up">接近成交 ${CLIENTS.filter(c=>c.funnel===2).length} 名</div></div></div>
+    <div class="card"><div class="kpi"><div class="n">${converted}</div><div class="l">本周转化</div><div class="d up">开户/购买/投资</div></div></div>
+    <div class="card"><div class="kpi"><div class="n">${pendScripts}</div><div class="l">待批准话术</div><div class="d down">需人工确认后转发</div></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>🔻 转化漏斗（简览）<span class="tag">点击进入漏斗页</span></h3>
+    ${funnelSegs(true)}
+    <div class="legend" style="margin-top:10px">
+      <div class="li"><span class="sw" style="background:var(--green)"></span>已转化 → 移交公司系统</div>
+      <div class="li"><span class="sw" style="background:var(--cobalt)"></span>重点跟进（接近成交须人工）</div>
+    </div>
+  </div>
+  <div class="grid cols-2" style="margin-top:16px">
+    <div class="card">
+      <h3>✅ 今日跟进提醒 <span class="tag">${todayEvents.length} 项</span></h3>
+      ${todayEvents.map(e=>{const c=byId(e.clientId);return `
+        <div class="row">
+          <div class="ava" style="background:var(--cobalt)">${c.name[0]}</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:13px">${c.name}</div><div style="font-size:11.5px;color:var(--muted)">${esc(e.title)}</div></div>
+          <span class="pill p-yel">今天</span>
+        </div>`;}).join("")||`<div class="empty">✓ 今日无到期提醒</div>`}
+      <div style="margin-top:10px"><button class="btn ghost sm" onclick="go('events')">查看全部临期事件 →</button></div>
+    </div>
+    <div class="card">
+      <h3>⏰ 临期事件 <span class="tag">事件驱动</span></h3>
+      ${EVENTS.slice(0,5).map(e=>{const c=byId(e.clientId);return `
+        <div class="row">
+          <span class="pill ${e.due==="今天"?'p-red':'p-gray'}">${esc(e.due)}</span>
+          <div style="flex:1;font-size:12.5px">${esc(e.title)}</div>
+          <span class="pill p-blue">${esc(e.type)}</span>
+        </div>`;}).join("")}
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>👥 高潜客户列表 <span class="tag">按跟进状态</span></h3>
+    <div class="flt">
+      <button class="${remindTab==='all'?'on':''}" onclick="setRT('all')">全部 ${CLIENTS.length}</button>
+      <button class="${remindTab==='待跟进'?'on':''}" onclick="setRT('待跟进')">待跟进 ${CLIENTS.filter(c=>c.funnel<=0).length}</button>
+      <button class="${remindTab==='跟进中'?'on':''}" onclick="setRT('跟进中')">跟进中 ${CLIENTS.filter(c=>c.funnel===1).length}</button>
+      <button class="${remindTab==='接近成交'?'on':''}" onclick="setRT('接近成交')">接近成交 ${CLIENTS.filter(c=>c.funnel===2).length}</button>
+      <button class="${remindTab==='已转化'?'on':''}" onclick="setRT('已转化')">已转化 ${CLIENTS.filter(c=>c.funnel>=3).length}</button>
+    </div>
+    <div class="clist">
+      ${CLIENTS.filter(c=>remindTab==="all"||STATUS_OF(c.funnel)===remindTab).map(c=>{
+        const st=STATUS_OF(c.funnel);
+        return `<div class="cc" onclick="openFromHome('${c.id}')">
+          <div class="top">
+            <div class="ava" style="background:${STAGE_COLOR[c.funnel]}">${c.name[0]}</div>
+            <div><div class="nm">${c.name}</div><div style="font-size:11.5px;color:var(--muted)">${c.title}</div></div>
+            <span class="pill ${STATUS_PILL[st]}" style="margin-left:auto">${st}</span>
+          </div>
+          <div class="meta">画像要素 ${c.profile.length} 条 · 跟进 ${c.touches.length} 次 · 漏斗 ${STAGES[c.funnel]}</div>
+          <div class="chips">${c.tags.slice(0,3).map(t=>`<span class="pill p-gray">${t}</span>`).join("")}</div>
+          <div class="next">▶ ${esc(c.next)}</div>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>🎯 6 项核心能力（本工具的全部）<span class="tag">由 v1.4 的 16 项收敛</span></h3>
+    <div class="grid cols-3" style="gap:10px">
+      ${[
+        {ic:"👥",n:"高潜客户列表与跟进提醒",d:"带状态的潜客工作台",to:"home"},
+        {ic:"👤",n:"极致颗粒客户画像",d:"个微零散信息挖掘，来源可追溯",to:"profile"},
+        {ic:"⏰",n:"事件 / 场景触发",d:"生日·人生·到期·活动自动提醒",to:"events"},
+        {ic:"💬",n:"个性化话术生成",d:"画像驱动 + 合规提示 + 人工批准",to:"scripts"},
+        {ic:"📋",n:"人工跟进记录",d:"沟通历史时间线，关键节点转人工",to:"followup"},
+        {ic:"🔻",n:"转化漏斗",d:"潜客→跟进→成交→移交公司",to:"funnel"}
+      ].map(x=>`
+        <div class="cc" onclick="go('${x.to}')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;gap:9px"><span style="font-size:17px">${x.ic}</span><div style="font-weight:700;font-size:13.5px">${x.n}</div></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:5px">${x.d}</div>
+        </div>`).join("")}
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#f6f9fe">
+    <h3>🤖 AI 能力边界（简化说明）<span class="tag">人在回路</span></h3>
+    <div class="agent-note">AI 只做<b>后端基础运营</b>：整理画像、触发提醒、起草话术、记录跟进。线下饭局、当面微信、信任建立、以及<b>接近成交关键节点的对接必须人工</b>，避免客户感知 AI 服务产生不信任。</div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#fbfcfe">
+    <h3>📌 本版设计取舍 <span class="tag">待用户确认</span></h3>
+    <div style="font-size:12.5px;color:var(--muted);line-height:1.9">
+      ① 租户切换/多顾问已移除 → 个人私有化定位（文洁：运营经验属私有）；② 多 Agent 仅保留上方一句边界说明（是否需要 Agent 细节页）；③ 试点口径需求为 10 名，演示造 8 名；④ 已成交客户直接标记「移交公司系统」，不在本工具继续跟进。
+    </div>
+  </div>
+  <div class="foot">理财师工作台 v1.8 · 演示合成数据 · 数据仅存个人设备 · 私有化部署</div>`;
+}
+function setRT(t){remindTab=t;render();}
+function setEvTab(t){evTab=t;render();}
+function openFromHome(id){selClient=id;go("profile");}
+
+/* ===================== 客户画像（重中之重） ===================== */
+function renderProfile(){
+  const c=byId(selClient)||CLIENTS[0];
+  const catCounts=CATS.map(cat=>({cat,n:c.profile.filter(p=>p.cat===cat).length}));
+  const maxN=Math.max(...catCounts.map(x=>x.n),1);
+  return `
+  <div class="view-h"><h1>客户画像</h1><span class="sub">极致细化颗粒度 · 个微聊天零散信息挖掘 · 来源可追溯</span></div>
+  <div class="hint"><span class="i">👤</span><div>画像数据<b>绝大多数来自个人微信聊天记录</b>（文洁：360 度零散信息分析挖掘）。每条要素都标注<b>来源</b>与<b>时间</b>，可追溯、可修正。点「新增画像要素」体验三个合规录入入口：<b>截屏 OCR 导入 / 口述转述 / 手动录入</b>；下方<b>「客户长期 Agent 状态面板」</b>以「一个客户一个长期 Agent」视角呈现记忆库 / 长期目标 / 隔离边界（P0-1）。</div></div>
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#0d1d35,#265dcc);color:#fff;border:none">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div class="ava" style="width:52px;height:52px;font-size:20px;background:rgba(255,255,255,.18)">${c.name[0]}</div>
+      <div style="flex:1">
+        <div style="font-size:17px;font-weight:800">${c.name}</div>
+        <div style="font-size:12.5px;opacity:.9;margin-top:3px">${c.title} · 画像要素 ${c.profile.length} 条 · 漏斗阶段：${STAGES[c.funnel]}</div>
+      </div>
+      <span class="pill" style="background:rgba(255,255,255,.16);color:#fff">状态 ${STATUS_OF(c.funnel)}</span>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" style="background:#fff;color:var(--cobalt)" onclick="openPeModal()">＋ 新增画像要素</button>
+      <button class="btn ghost" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)" onclick="go('scripts')">为此客户生成话术 →</button>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#13284a,#1b3a6b);color:#fff;border:none">
+    <h3 style="color:#fff">🤖 客户长期 Agent 状态面板 <span class="tag" style="background:rgba(255,255,255,.16);color:#fff">P0-1 · 一个客户一个长期 Agent</span></h3>
+    <div class="grid cols-3" style="gap:12px">
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px">
+        <div style="font-size:12px;opacity:.85;font-weight:600">🧠 记忆库 Memory</div>
+        <div style="font-size:26px;font-weight:800;margin:4px 0">${c.profile.length}<span style="font-size:12px;font-weight:500;opacity:.8"> 条记忆</span></div>
+        <div style="font-size:11.5px;opacity:.85;line-height:1.6">每条画像要素<b>带来源与时间戳</b>，可追溯、可修正。<br>来源： ${["聊天记录","客户经理录入","活动"].map(s=>c.profile.filter(p=>p.src===s).length+"·"+s).join(" / ")}</div>
+        <div style="margin-top:8px;font-size:11px;opacity:.8;border-top:1px solid rgba(255,255,255,.15);padding-top:6px">↳ 最近记忆：${esc((c.profile[c.profile.length-1]||{}).text||"暂无")}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px">
+        <div style="font-size:12px;opacity:.85;font-weight:600">🎯 长期目标 Goals</div>
+        ${["开户","购买","投资"].map(g=>{
+          const idx={"开户":3,"购买":4,"投资":5}[g];
+          const done=c.funnel>=idx, now=c.funnel===idx;
+          return `<div style="display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12.5px">
+            <span style="width:15px;height:15px;border-radius:50%;background:${done?'#0b7556':now?'#ffd166':'rgba(255,255,255,.2)'};display:inline-block;flex-shrink:0"></span>
+            <span style="${done?'':now?'font-weight:700':''};opacity:${done?'1':now?'1':'.7'}">${g}${done?' ✓':now?' · 进行中':''}</span>
+          </div>`;
+        }).join("")}
+        <div style="font-size:11.5px;opacity:.85;margin-top:9px;border-top:1px solid rgba(255,255,255,.15);padding-top:6px">当前阶段：${STAGES[c.funnel]}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:12px">
+        <div style="font-size:12px;opacity:.85;font-weight:600">🔒 隔离边界 Isolation</div>
+        <div style="margin-top:8px"><span class="pill" style="background:rgba(11,117,86,.92);color:#fff">本地私有实例</span></div>
+        <div style="font-size:11.5px;opacity:.85;font-weight:400;line-height:1.6;margin-top:8px">对应视频「每个 Agent 自带虚拟机」的<b>隔离思想</b>，以私有化部署达成——数据不出个人设备 · 运营经验属使用者私有。</div>
+      </div>
+    </div>
+  </div>
+  <div class="grid cols-2" style="margin-bottom:16px">
+    <div class="card">
+      <h3>📊 画像要素分布 <span class="tag">${c.profile.length} 条</span></h3>
+      ${catCounts.map(x=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12.5px">
+          <span style="width:64px;color:var(--muted)">${CAT_ICON[x.cat]} ${x.cat}</span>
+          <span class="mini-bar"><i style="width:${x.n/maxN*100}%;background:${CAT_COLOR[x.cat]}"></i></span>
+          <b>${x.n}</b>
+        </div>`).join("")}
+    </div>
+    <div class="card">
+      <h3>🗂 来源构成 <span class="tag">可追溯</span></h3>
+      ${["聊天记录","客户经理录入","活动"].map(s=>{const n=c.profile.filter(p=>p.src===s).length;return `
+        <div style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12.5px">
+          ${srcPill(s)}
+          <span class="mini-bar"><i style="width:${n/maxN*100}%;background:${SRC_COLOR[s]}"></i></span>
+          <b>${n} 条</b>
+        </div>`;}).join("")}
+      <div style="font-size:11.5px;color:var(--muted);margin-top:8px">合规导入路径：口述转述+AI 结构化（存量）、自有设备截图+本地 OCR（存量）；无授权第三方解析禁用。</div>
+    </div>
+  </div>
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>🧬 画像要素（按分类）<span class="tag">来源+时间</span></h3>
+      ${CATS.filter(cat=>c.profile.some(p=>p.cat===cat)).map(cat=>`
+        <div class="pe-cat">
+          <div class="ph">
+            <div class="ci" style="background:${CAT_COLOR[cat]}">${CAT_ICON[cat]}</div>
+            <div class="ct">${cat}</div>
+            <div class="cn">${c.profile.filter(p=>p.cat===cat).length} 条</div>
+          </div>
+          ${c.profile.filter(p=>p.cat===cat).map(p=>`
+            <div class="pe">
+              <div class="tx">${esc(p.text)}
+                <div class="q">${srcPill(p.src)}<span>🕐 ${p.time}</span></div>
+              </div>
+            </div>`).join("")}
+        </div>`).join("")}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h3>🗨 个微聊天零散信息 → 画像</h3>
+        <div class="script-draft">例（截屏 OCR 识别片段）：「王总 8/12 微信：『最近厂里回款到账，你看看有没有合适的』」
+        → 结构化提取：投资偏好「分红到账拟再投资」+ 时间 2026-08-12 + 来源：聊天记录
+        → 已自动并入左侧画像，供事件触发与话术生成调用。</div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button class="btn sm" onclick="openPeModal()">体验三个录入入口 →</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🧭 驱动类型速览 <span class="tag">沟通策略</span></h3>
+        ${c.profile.filter(p=>p.cat==="驱动类型").map(p=>`
+          <div style="font-size:13px;padding:4px 0"><b style="color:var(--cobalt)">${esc(p.text.split("：")[0])}</b>${esc(p.text.split("：")[1]?("："+p.text.split("：")[1]):"")}</div>`).join("")}
+        <div style="font-size:11.5px;color:var(--muted);margin-top:8px">建议：${c.funnel>=2?"接近成交关键节点——必须人工对接，避免 AI 代发。":"以画像驱动个性化沟通，定期跟进。"}</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">画像要素全部可追溯（来源/时间）· 可随时补充与修正 · 演示合成数据</div>`;
+}
+
+/* ---------- 新增画像要素（三入口） ---------- */
+let peCands=[];
+let peExtracted=[];
+function openPeModal(){
+  peCands=[];
+  peExtracted=[];
+  peTab="ocr";
+  renderPeModal();
+}
+function closePeModal(){document.getElementById("modalHost").innerHTML="";}
+function renderPeModal(){
+  document.getElementById("modalHost").innerHTML=`
+  <div class="mask" onclick="if(event.target===this)closePeModal()"><div class="modal">
+    <div class="mh"><div class="mt">新增画像要素</div>
+      <div class="ms">为「${byId(selClient).name}」补充画像 · 三个合规录入入口 · 模拟演示</div></div>
+    <div class="mb">
+      <div class="tabs">
+        <button class="${peTab==='ocr'?'on':''}" onclick="setPeTab('ocr')">📸 截屏 OCR 导入</button>
+        <button class="${peTab==='talk'?'on':''}" onclick="setPeTab('talk')">🎙 口述转述</button>
+        <button class="${peTab==='manual'?'on':''}" onclick="setPeTab('manual')">✍️ 手动录入</button>
+      </div>
+      <div id="peBody"></div>
+    </div>
+    <div class="mf"><button class="btn ghost" onclick="closePeModal()">关闭</button></div>
+  </div></div>`;
+  renderPeBody();
+}
+function setPeTab(t){peTab=t;renderPeBody();}
+function renderPeBody(){
+  const b=document.getElementById("peBody");if(!b)return;
+  let h="";
+  if(peTab==="ocr"){
+    h=`
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">将手机截图（个微聊天记录）导入，本地 OCR 识别 → 候选要素勾选入库。模拟演示：点击下方区域触发「识别」。</div>
+    <div class="dropzone" onclick="peOcrSim()"><div class="dz-ic">📸</div>点击模拟「导入截屏并本地 OCR」<br><span style="font-size:11px">合规：自有设备截图 + 本地 OCR，不经过第三方解析</span></div>
+    <div id="peOcrOut"></div>
+    ${peCands.length?`<button class="btn sm" style="margin-top:10px" onclick="peOcrImport()">批量入库（已选 ${peCands.filter(x=>x.on).length} 条）</button>`:""}`;
+  }else if(peTab==="talk"){
+    h=`
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">把客户当面/电话说的话口述出来，AI 结构化提取要素（合规：口述转述+AI 结构化，存量数据主路径）。</div>
+    <textarea id="talkInput" style="font-family:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%;min-height:86px" placeholder="模拟口述：客户说『下个月孩子要出国读书了，这笔钱得留出来，剩下的再看看吧……』"></textarea>
+    <button class="btn sm" style="margin-top:10px" onclick="peTalkSim()">AI 结构化提取 →</button>
+    <div id="peTalkOut"></div>`;
+  }else{
+    h=`
+    <div class="frm">
+      <div><label>画像分类</label><select id="peCat">${CATS.map(c=>`<option>${c}</option>`).join("")}</select></div>
+      <div><label>要素内容</label><textarea id="peText" placeholder="记录客户表达的偏好 / 私人信息 / 事件…"></textarea></div>
+      <div><label>来源</label><select id="peSrc">${Object.keys(SRC_COLOR).map(s=>`<option>${s}</option>`).join("")}</select></div>
+      <button class="btn" onclick="peManualSave()">保存画像要素</button>
+    </div>`;
+  }
+  b.innerHTML=h;
+}
+function peOcrSim(){
+  document.getElementById("peOcrOut").innerHTML=`<div style="font-size:12px;color:var(--muted);padding:8px 0">本地 OCR 识别中…</div>`;
+  setTimeout(()=>{
+    const c=byId(selClient);
+    peCands=[
+      {cat:"投资偏好",text:`「${c.name}」提到下周有笔资金到账，问有没有合适的稳健产品`,src:"聊天记录",time:today(),on:true},
+      {cat:"人生事件",text:`聊天中透露「孩子 ${["即将回国","准备订婚","拿到新工作offer","学校放假回国"][selClient.charCodeAt(1)%4]}」`,src:"聊天记录",time:today(),on:true},
+      {cat:"兴趣",text:`关注「${["科技新品","高尔夫球具","烘焙器具","跨境展会"][selClient.charCodeAt(1)%4]}」话题`,src:"聊天记录",time:today(),on:false}
+    ];
+    document.getElementById("peOcrOut").innerHTML=`
+      <div style="font-size:12px;color:var(--green);font-weight:600;margin:8px 0 4px">✓ 识别出 ${peCands.length} 条候选（本地完成，未上传）</div>
+      ${peCands.map((x,i)=>`
+        <div class="cand"><input type="checkbox" ${x.on?'checked':''} onchange="peCands[${i}].on=this.checked;document.getElementById('peOcrBtn').textContent='批量入库（已选 '+peCands.filter(y=>y.on).length+' 条）'">
+          <div class="ct">${esc(x.text)}<div class="cm">${catPill(x.cat)} ${srcPill(x.src)} · ${x.time}</div></div>
+        </div>`).join("")}
+      <button class="btn sm" id="peOcrBtn" style="margin-top:10px" onclick="peOcrImport()">批量入库（已选 ${peCands.filter(x=>x.on).length} 条）</button>`;
+  },600);
+}
+function peOcrImport(){
+  const n=peCands.filter(x=>x.on).length;
+  peCands.filter(x=>x.on).forEach(x=>addProfileElem(x));
+  peCands=[];
+  closePeModal();
+  toast(`✓ 已入库 ${n} 条画像要素（来源：聊天记录 · 本地 OCR）`);
+}
+function peTalkSim(){
+  const c=byId(selClient);
+  const txt=document.getElementById("talkInput").value||`下个月孩子要出国读书了，这笔钱得留出来，剩下的再看看稳健的。`;
+  document.getElementById("peTalkOut").innerHTML=`<div style="font-size:12px;color:var(--muted);padding:8px 0">AI 结构化提取中…</div>`;
+  setTimeout(()=>{
+    peExtracted=[
+      {cat:"人生事件",text:`「${c.name}」孩子将出国/远行，家庭流动性需求上升（从口述：${txt.slice(0,24)}…）`,src:"客户经理录入",time:today()},
+      {cat:"投资偏好",text:`偏好「稳健」——明确保留流动性后仍倾向稳健产品`,src:"客户经理录入",time:today()}
+    ];
+    document.getElementById("peTalkOut").innerHTML=`
+      <div style="font-size:12px;color:var(--green);font-weight:600;margin:8px 0 4px">✓ 提取 ${peExtracted.length} 条要素（需你确认后入库）</div>
+      ${peExtracted.map((x,i)=>`
+        <div class="cand"><input type="checkbox" checked onchange="peExtracted[${i}].on=this.checked">
+          <div class="ct">${esc(x.text)}<div class="cm">${catPill(x.cat)} ${srcPill(x.src)} · ${x.time}</div></div>
+        </div>`).join("")}
+      <button class="btn sm" style="margin-top:10px" onclick="peTalkImport()">确认入库</button>`;
+  },600);
+}
+function peTalkImport(){
+  peExtracted.filter(x=>x.on!==false).forEach(x=>addProfileElem(x));
+  peExtracted=[];
+  closePeModal();
+  toast("✓ 已入库口述转述要素（来源：客户经理录入）");
+}
+function peManualSave(){
+  const cat=document.getElementById("peCat").value;
+  const text=document.getElementById("peText").value.trim();
+  const src=document.getElementById("peSrc").value;
+  if(!text){toast("请填写要素内容");return;}
+  addProfileElem({cat,text,src,time:today()});
+  closePeModal();
+  toast("✓ 已保存画像要素");
+}
+function addProfileElem(x){
+  const c=byId(selClient);
+  c.profile.push({cat:x.cat,text:x.text,src:x.src,time:x.time});
+  if(view==="profile")render();
+}
+
+/* ===================== 事件 / 场景触发 ===================== */
+const EV_ICON={"产品到期":"📦","产品周期":"📆","配置审查":"⚖️","人生事件":"🎭","生日":"🎂","活动匹配":"🎪"};
+const EV_COLOR={"产品到期":"#265dcc","产品周期":"#0b7556","配置审查":"#80500b","人生事件":"#b33745","生日":"#6b3fa0","活动匹配":"#315efb"};
+function renderEvents(){
+  const evs=evTab==="all"?EVENTS:EVENTS.filter(e=>e.type===evTab);
+  return `
+  <div class="view-h"><h1>事件 / 场景触发</h1><span class="sub">基于画像要素的跟进时机提醒 · 公司活动自动匹配客户</span></div>
+  <div class="hint"><span class="i">⏰</span><div>跟进时机由<b>事件引擎</b>驱动，不靠记忆：生日、人生事件、产品到期、公司活动自动匹配客户并生成专属话术。点下方按钮<b>模拟触发</b>，或选择一场<b>公司活动</b>体验「自动匹配客户 + 生成专属话术」。</div></div>
+  <div class="grid cols-4" style="margin-bottom:16px">
+    ${[["生日","🎂","生日当天+提前一周提醒，非群发礼品","自动"],["人生事件","🎭","婚育/出国/融资/退休等过渡事件","自动"],["产品到期","📦","到期前 T-30/T-7/T-3/T-0","人工"],["活动匹配","🎪","公司活动按画像自动匹配客户","人工"]].map((e,i)=>`
+      <div class="ev-card">
+        <div class="ic" style="background:${["#6b3fa0","#b33745","#265dcc","#315efb"][i]}">${e[1]}</div>
+        <div style="font-weight:700;margin-top:8px;font-size:13px">${e[0]}</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:3px">${e[2]}</div>
+        <div class="mono" style="margin-top:6px">审批：${e[3]}</div>
+      </div>`).join("")}
+  </div>
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>📋 临期事件提醒 <span class="tag">${EVENTS.length} 条</span></h3>
+      <div class="flt">
+        <button class="${evTab==='all'?'on':''}" onclick="setEvTab('all')">全部</button>
+        ${Object.keys(EV_ICON).map(t=>`<button class="${evTab===t?'on':''}" onclick="setEvTab('${t}')">${EV_ICON[t]} ${t}</button>`).join("")}
+      </div>
+      ${evs.map(e=>{const c=byId(e.clientId);return `
+        <div class="ev-item">
+          <span class="dot" style="background:${EV_COLOR[e.type]||"#5d6b82"}"></span>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:13px">${c.name} · ${esc(e.title)}</div>
+            <div style="font-size:12px;color:var(--muted)">${esc(e.detail)}</div>
+          </div>
+          <div><span class="pill ${e.due==='今天'?'p-red':'p-gray'}">${esc(e.due)}</span></div>
+        </div>`;}).join("")}
+    </div>
+    <div>
+      <div class="card">
+        <h3>⚡ 模拟触发提醒</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn ghost sm" onclick="simEv('生日')">🎂 模拟生日提醒</button>
+          <button class="btn ghost sm" onclick="simEv('产品到期')">📦 模拟产品到期</button>
+          <button class="btn ghost sm" onclick="simEv('人生事件')">🎭 模拟人生事件</button>
+        </div>
+        <div id="simOut" style="margin-top:10px;font-size:12.5px;color:var(--muted)">点击上方按钮模拟事件触发 → 生成跟进待办并提示对应话术场景。</div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>🎪 公司活动自动匹配客户</h3>
+        ${ACTIVITIES.map(a=>`
+          <div class="act-card">
+            <div class="ah">
+              <span style="font-size:16px">🎪</span>
+              <div style="flex:1"><div style="font-weight:700;font-size:13.5px">${a.name}</div><div style="font-size:11.5px;color:var(--muted)">${a.date} · ${esc(a.desc)}</div></div>
+              <button class="btn sm" onclick="matchActivity('${a.id}')">匹配并生成话术</button>
+            </div>
+            <div class="matched">${a.tags.map(t=>`<span class="pill p-blue">画像标签：${t}</span>`).join("")}</div>
+            <div id="matchOut_${a.id}"></div>
+          </div>`).join("")}
+        <div style="font-size:11.5px;color:var(--muted)">匹配逻辑：活动标签 ∩ 客户画像标签 → 自动生成专属邀约话术（待人工批准）。</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">事件来源：画像要素（人生事件/生日/偏好）+ 产品数据 · 演示合成数据</div>`;
+}
+function simEv(type){
+  const c=byId(selClient);
+  const map={
+    "生日":{t:`${c.name} 生日提醒（提前一周准备）`,d:`画像已记录生日偏好 → 建议专属关怀（非群发），话术场景：人生事件关怀`},
+    "产品到期":{t:`${c.name} 名下产品到期提醒`,d:`生成到期重配话术 → 去「个性化话术」页查看并批准`},
+    "人生事件":{t:`${c.name} 人生事件提醒`,d:`从聊天记录探测到过渡事件 → 建议以朋友身份问候`}
+  };
+  document.getElementById("simOut").innerHTML=`
+    <div style="background:#f4f7fc;border:1px solid var(--line);border-radius:9px;padding:10px 12px">
+      <div style="font-weight:700;font-size:13px;color:var(--cobalt)">⚡ ${map[type].t}</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:3px">${map[type].d}</div>
+      <button class="btn sm" style="margin-top:8px" onclick="go('scripts')">去生成话术 →</button>
+    </div>`;
+  toast(`已模拟触发「${type}」事件（${c.name}）`);
+}
+function matchActivity(aid){
+  const a=ACTIVITIES.find(x=>x.id===aid);
+  const out=document.getElementById("matchOut_"+aid);
+  a.matched.forEach(cid=>{
+    const c=byId(cid);
+    SCRIPTS.push({id:Date.now()+Math.floor(Math.random()*100),clientId:cid,scene:"活动邀约",status:"pending",ts:nowTs().slice(0,5),
+      draft:`${c.name}，${a.date} 有一场「${a.name}」${a.desc}。结合您关注的${c.tags.slice(0,2).join("、")}方向，内容应该很契合，需要我为您预留一个席位吗？`});
+  });
+  out.innerHTML=`<div style="font-size:12px;color:var(--green);font-weight:600;margin-top:6px">✓ 已自动匹配 ${a.matched.length} 位客户并生成专属邀约话术（待人工批准）</div>`;
+  toast(`「${a.name}」已匹配 ${a.matched.length} 位客户 → 去话术页批准`);
+  setTimeout(()=>go("scripts"),900);
+}
+
+/* ===================== 个性化话术（人在回路） ===================== */
+/* ---------- P0-3 四步链路（need help 转人工） ---------- */
+const CHAIN_STEPS=["生成草稿","合规检查","人批准","人工转发"];
+let chainPos=0;            // 0=未开始 1=草稿 2=合规过 3=人批准 4=已转发闭环
+function chainBadge(i){
+  if(i<chainPos)return `<span class="pill p-green">已完成</span>`;
+  if(i===chainPos)return `<span class="pill p-yel">进行中</span>`;
+  return `<span class="pill p-gray">待处理</span>`;
+}
+function agentChain(){
+  return `<div class="chain4">
+    ${CHAIN_STEPS.map((s,i)=>`
+      <div class="c4 ${i<chainPos?'done':i===chainPos?'now':''}">
+        <div class="c4top"><span class="c4num">${i+1}</span><b>${s}</b>${chainBadge(i)}</div>
+        <div class="c4acts"><button class="btn ghost sm" onclick="needHelp(${i+1})">need help 转人工</button></div>
+      </div>
+      ${i<CHAIN_STEPS.length-1?'<span class="c4arr">→</span>':''}`).join("")}
+  </div>`;
+}
+function needHelp(step){
+  toast(`need help → 已转人工：步骤「${CHAIN_STEPS[step-1]}」由文洁(财富顾问)接管`);
+}
+/* ---------- P0-4 关系型经营目标维度 ---------- */
+const DIM_HINTS={
+  "信任积累":"先建立信任，不急于推产品；多听少说、长期陪伴。",
+  "情绪价值":"提供情绪共鸣与陪伴感，记住客户在意的人与事。",
+  "专业服务":"体现专业判断与顾问价值，给结论 + 数据。",
+  "转化推进":"顺势引导开户 / 购买 / 投资动作，明确下一步。"
+};
+function renderScripts(){
+  const c=byId(selClient);
+  const pend=SCRIPTS.filter(s=>s.status==="pending");
+  const appr=SCRIPTS.filter(s=>s.status==="approved");
+  const done=SCRIPTS.filter(s=>s.status==="forwarded"||s.status==="rejected");
+  return `
+  <div class="view-h"><h1>个性化话术</h1><span class="sub">关系型经营 · 人在回路 · AI 仅做后端草稿</span></div>
+  <div class="banner"><span class="bi">⚠</span><div>AI 仅后端辅助：话术是<b>建议草稿</b>，客户侧沟通（批准 + 转发个人微信）必须<b>人工</b>完成。任何一步卡住都可「<b>need help 转人工</b>」由文洁（财富顾问）接管。本页融合 P0-2/P0-3/P0-4。</div></div>
+  <div class="hint"><span class="i">💬</span><div>基于客户画像 + 场景生成沟通建议（模拟）。外发前必须<b>人工批准</b>并<b>人工转发个人微信</b>；合规提示条为轻量检查（v1.4 的 8 闸门大屏已收敛）。<b>接近成交关键节点必须人工对接</b>。</div></div>
+  <div class="card" style="margin-bottom:16px">
+    <h3>🔗 内容生产四步链路（人在回路范式 · P0-3）<span class="tag">need help 随时转人工</span></h3>
+    ${agentChain()}
+    <div style="font-size:11.5px;color:var(--muted);margin-top:8px">链路：<b>生成草稿 → 合规检查 → 人批准 → 人工转发</b>。每步有状态（待处理 / 进行中 / 已完成），任一步可「need help 转人工」。</div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <h3>✍️ 生成话术（模拟）</h3>
+    <div class="frm" style="flex-direction:row;flex-wrap:wrap">
+      <div style="min-width:180px;flex:1"><label>客户</label><select id="scClient">${CLIENTS.map(x=>`<option value="${x.id}" ${x.id===selClient?'selected':''}>${x.name}</option>`).join("")}</select></div>
+      <div style="min-width:160px;flex:1"><label>场景</label><select id="scScene">${SCENES.map(s=>`<option>${s}</option>`).join("")}</select></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn" onclick="genScript()">生成话术草稿</button></div>
+    </div>
+    <div class="frow" style="margin-top:12px"><div style="flex:1">
+      <label>关系型经营目标维度（可多选 · P0-4）</label>
+      <div class="dimset">
+        <label><input type="checkbox" name="scDim" value="信任积累" checked>🤝 信任积累</label>
+        <label><input type="checkbox" name="scDim" value="情绪价值">💗 情绪价值</label>
+        <label><input type="checkbox" name="scDim" value="专业服务">🎓 专业服务</label>
+        <label><input type="checkbox" name="scDim" value="转化推进">📈 转化推进</label>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:6px">勾选后，生成话术会按所选维度给出对应提示，体现「关系型经营」而非只盯转化。</div>
+    </div></div>
+    <div id="genOut"></div>
+  </div>
+  <div class="grid cols-3">
+    <div class="card"><h3>⏳ 待批准 <span class="tag">${pend.length}</span></h3>
+      ${pend.map(s=>apCard(s)).join("")||`<div class="empty">无待批准话术</div>`}</div>
+    <div class="card"><h3>📤 已批准·待人工转发 <span class="tag">${appr.length}</span></h3>
+      ${appr.map(s=>apCard(s,true)).join("")||`<div class="empty">无</div>`}</div>
+    <div class="card"><h3>✅ 已闭环（转发/驳回）<span class="tag">${done.length}</span></h3>
+      ${done.map(s=>apCard(s,false,true)).join("")||`<div class="empty">无</div>`}</div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#f6f9fe">
+    <h3>🛡 轻量合规提示（由 v1.4 的 8 闸门大屏收敛）<span class="tag">红线内建</span></h3>
+    <div class="comply">
+      ${[["不荐股 / 不荐具体证券","禁止个股代码、买卖建议、技术面点评"],
+         ["不承诺收益","禁「保本/稳赚/年化 X% 确定」等表述"],
+         ["适当性前置","话术风险等级必须 ≤ 客户画像风险偏好"],
+         ["风险提示义务","含投资建议须带显著风险声明与顾问身份标识"],
+         ["私募不晒收益 / 测评不外泄","私募内容不展示历史收益率；不发测评答案"]].map(ct=>`
+        <div class="cl"><span class="ck">✓</span><div>${ct[0]}<span style="color:var(--muted)"> —— ${ct[1]}</span></div></div>`).join("")}
+    </div>
+    <div class="agent-note" style="margin-top:10px">AI 只做后端：话术为<b>建议草稿</b>，对外发送必须由你人工确认并人工转发个人微信；不自动读取/群发个人微信。运营经验与历史最优沟通路径属使用者私有资产。</div>
+  </div>
+  <div class="foot">人在回路 · 一切外发留痕 · 演示合成数据</div>`;
+}
+function genScript(){
+  const cid=document.getElementById("scClient").value;
+  const scene=document.getElementById("scScene").value;
+  const c=byId(cid);
+  const drive=c.profile.find(p=>p.cat==="驱动类型");
+  const dims=Array.from(document.querySelectorAll('input[name="scDim"]:checked')).map(x=>x.value);
+  const tpl={
+    "产品到期重配":`${c.name}，您去年配置的稳健固收A将于9月15日到期。结合当前利率环境，我按您一贯的稳健偏好准备了两只同风险等级（R2）的方案，需要发您详情吗？`,
+    "人生事件关怀":`${c.name}，听您提起${["孩子学业/家庭","融资进展","工作安排","跨境事务"][cid.charCodeAt(1)%4]}，最近一切都顺利吧？有空约您聊聊，不聊产品。`,
+    "活动邀约":`${c.name}，近期有一场与您关注方向契合的闭门活动（${esc(c.tags.slice(0,2).join("、"))}主题），席位有限，需要我为您预留吗？`,
+    "定期跟进":`${c.name}，上次沟通后进展还顺利吗？${drive?esc("您提到"+(drive.text.split("：")[1]||"最近的想法")+",我留意到相关安排,"):""}有什么需要我随时说。`
+  };
+  const draft=tpl[scene];
+  /* P0-4：按所选目标维度给出对应提示；P0-2：标注参考历史最优沟通 */
+  const dimNote=dims.length?`（关系型经营目标：${dims.join(" · ")}）\n提示：${dims.map(d=>DIM_HINTS[d]).join(" ")}`:"";
+  const refNote=`\n〔参考历史最优沟通〕文洁与同类「${c.tags[0]||"高净值"}」客户的高信任沟通路径已对齐。`;
+  const id=Date.now();
+  SCRIPTS.push({id,clientId:cid,scene,status:"pending",ts:nowTs().slice(0,5),draft,
+    dims:dims.length?dims:[], ref:true});
+  /* P0-3：生成草稿 + 合规检查 自动完成，进入「人批准」进行中 */
+  chainPos=2;
+  const out=document.getElementById("genOut");
+  if(out){
+    out.innerHTML=`<div style="background:#f4f7fc;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="refbadge">★ 参考历史最优沟通</span>${dims.map(d=>`<span class="pill p-purple">${d}</span>`).join("")}</div>
+      <div class="script-draft" style="margin-top:0">${esc(draft)}${dimNote?esc("\n"+dimNote):""}${esc(refNote)}</div>
+    </div>`;
+  }
+  toast("已生成话术草稿 → 请人工批准并转发（链路进入「人批准」）");
+  render();
+}
+function apCard(s,approved,closed){
+  const c=byId(s.clientId);
+  let acts="";
+  if(!approved&&!closed&&s.status!=="rejected")acts=`<div class="acts"><button class="btn sm" onclick="approveScript(${s.id})">✓ 批准</button><button class="btn ghost sm" onclick="rejectScript(${s.id})">驳回</button></div>`;
+  else if(approved&&!closed)acts=`<div class="acts"><button class="btn green sm" onclick="forwardScript(${s.id})">📤 已人工转发微信</button></div>`;
+  else if(s.status==="rejected")acts=`<div style="font-size:11.5px;color:var(--red);font-weight:600;margin-top:6px">✕ 已驳回 · 建议人工当面沟通</div>`;
+  else acts=`<div style="font-size:11.5px;color:var(--green);font-weight:600;margin-top:6px">✓ 已闭环留痕</div>`;
+  const key=c.funnel>=2&&!closed?`<div class="keynode" style="margin-top:7px">⚠ 接近成交关键节点：必须人工对接发送，避免 AI 代发</div>`:"";
+  const meta=(s.ref?`<span class="refbadge">★ 参考历史最优沟通</span>`:"")+(s.dims&&s.dims.length?s.dims.map(d=>`<span class="pill p-purple">${d}</span>`).join(""):"");
+  return `<div class="ap">
+    <div class="h"><div class="ava" style="background:${STAGE_COLOR[c.funnel]}">${c.name[0]}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:12.5px">${c.name} · ${s.scene}</div><div style="font-size:11px;color:var(--muted)">${s.ts} · 画像驱动草稿</div></div>
+      <span class="pill p-blue">${esc(s.scene)}</span></div>
+    ${meta?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px">${meta}</div>`:""}
+    <div class="script-draft">${esc(s.draft)}</div>
+    ${key}
+    ${!closed?`<div class="comply" style="margin-top:8px">${["不荐股 ✓","不承诺收益 ✓","适当性 ✓","风险提示 ✓"].map(x=>`<div class="cl"><span class="ck">✓</span><div>${x}</div></div>`).join("")}</div>`:""}
+    ${acts}
+  </div>`;
+}
+function approveScript(id){
+  const s=SCRIPTS.find(x=>x.id===id);if(!s)return;
+  s.status="approved";
+  chainPos=3; /* P0-3：人批准 完成，进入「人工转发」 */
+  toast("✓ 已批准 → 请人工转发至个人微信（链路进入「人工转发」）");
+  render();
+}
+function rejectScript(id){
+  const s=SCRIPTS.find(x=>x.id===id);if(!s)return;
+  s.status="rejected";s.draft=s.draft+"\n[已驳回，改由人工当面沟通]";
+  toast("已驳回 · 建议转人工对接（成交关键节点）");
+  render();
+}
+function forwardScript(id){
+  const s=SCRIPTS.find(x=>x.id===id);if(!s)return;
+  s.status="forwarded";
+  chainPos=4; /* P0-3：人工转发 完成，链路闭环 */
+  toast("✓ 已记录人工转发 · 链路闭环留痕");
+  render();
+}
+
+/* ===================== 跟进记录（时间线） ===================== */
+function renderFollowup(){
+  const c=byId(selClient)||CLIENTS[0];
+  const touches=c.touches.slice().reverse();
+  return `
+  <div class="view-h"><h1>跟进记录</h1><span class="sub">每次跟进留痕 · 沟通历史时间线 · 关键节点转人工</span></div>
+  <div class="hint"><span class="i">📋</span><div>记录每次跟进（方式/时间/要点），形成沟通历史时间线。客户进入<b>接近成交</b>后，时间线标记「必须人工对接」——成交关键节点不经过 AI。成功跟进可<b>「沉淀为模板」</b>进入下方「我的经验库」（P0-2 运营经验自学习自迭代）。</div></div>
+  <div class="card" style="margin-bottom:16px">
+    <h3>👤 跟进对象 <span class="tag">状态 ${STATUS_OF(c.funnel)}</span></h3>
+    <div class="flt">${CLIENTS.map(x=>`<button class="${x.id===selClient?'on':''}" onclick="setSel('${x.id}')">${x.name}</button>`).join("")}</div>
+  </div>
+  <div class="grid cols-2">
+    <div class="card">
+      <h3>🗓 沟通历史时间线 <span class="tag">${c.touches.length} 次</span></h3>
+      <div class="timeline">
+        ${c.touches.map((t,idx)=>({t,idx})).reverse().map(({t,idx})=>`
+          <div class="tl-item">
+            <span class="tdot" style="background:${t.ch==="面谈"?"#265dcc":t.ch==="电话"?"#0b7556":"#80500b"}"></span>
+            <div class="th">
+              <span style="font-weight:700;font-size:13px">${t.date}</span>
+              <span class="pill p-blue">${esc(t.ch)}</span>
+              <span class="pill p-gray">${esc(t.type)}</span>
+              ${c.funnel>=2&&t.date>="2026-08-01"?`<span class="pill p-red">必须人工对接</span>`:""}
+            </div>
+            <div style="font-size:12.5px;margin-top:4px">${esc(t.summary)}</div>
+            <div style="font-size:11.5px;color:var(--muted);margin-top:2px">结果：${esc(t.result)}</div>
+            <div style="margin-top:7px"><button class="btn ghost sm" onclick="saveAsTemplate('${c.id}',${idx})">🧠 沉淀为模板</button></div>
+          </div>`).join("")||`<div class="empty">暂无跟进记录</div>`}
+      </div>
+      ${c.funnel>=2?`<div class="keynode">⚠ ${c.name} 已进入「${STAGES[c.funnel]}」阶段：关键节点必须人工对接，AI 仅记录与提醒，不代发任何内容。</div>`:""}
+    </div>
+    <div>
+      <div class="card">
+        <h3>＋ 记录一次跟进</h3>
+        <div class="frm">
+          <div class="frow">
+            <div><label>方式</label><select id="fkCh"><option>微信</option><option>电话</option><option>面谈</option><option>活动</option></select></div>
+            <div><label>时间</label><input id="fkDate" value="${today()}"></div>
+          </div>
+          <div><label>跟进要点</label><textarea id="fkText" placeholder="记录沟通内容、客户反馈、下一步约定…"></textarea></div>
+          <div><label>结果</label><select id="fkResult"><option>已记录</option><option>约面谈</option><option>意向明确</option><option>待观察</option></select></div>
+          <button class="btn" onclick="addTouch()">保存跟进记录</button>
+        </div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:12px">每条记录自动写入时间线并留痕。接近成交客户的记录会标记「必须人工对接」。</div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>🧠 我的经验库 <span class="tag">P0-2 · 自学习自迭代 · ${TEMPLATES.length} 条</span></h3>
+        <div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">把成功跟进沉淀为可复用模板；生成话术时自动<b>参考历史最优沟通</b>。运营经验属使用者私有资产。</div>
+        ${TEMPLATES.map(t=>`
+          <div class="cand" style="align-items:center">
+            <div class="ct" style="flex:1"><b style="font-size:12.5px">${esc(t.title)}</b> <span class="pill p-purple" style="margin-left:4px">${esc(t.cat)}</span>
+              <div class="cm">${esc(t.note)}</div>
+              <div class="cm">已复用 ${t.use} 次</div>
+            </div>
+            <button class="btn ghost sm" onclick="reuseTemplate(${t.id})">复用</button>
+          </div>`).join("")}
+      </div>
+    </div>
+  </div>
+  <div class="foot">跟进记录 = 信任经营的过程资产 · 演示合成数据</div>`;
+}
+function saveAsTemplate(cid,idx){
+  const c=byId(cid);const t=c.touches[idx];if(!t)return;
+  tplSeq++;
+  const catGuess=(t.type==="面谈"||t.type==="方案沟通")?"信任积累":(t.type==="关怀"||t.type==="生日关怀")?"情绪价值":"专业服务";
+  TEMPLATES.push({id:tplSeq,cat:catGuess,title:(t.type||t.ch)+"·"+t.summary.slice(0,10)+(t.summary.length>10?"…":""),note:t.summary,use:0});
+  toast("✓ 已沉淀为模板 → 进入「我的经验库」（可复用）");
+  render();
+}
+function reuseTemplate(id){
+  const t=TEMPLATES.find(x=>x.id===id);if(!t)return;
+  t.use++;
+  toast("✓ 已复用模板「"+t.title+"」→ 经验同步到当前跟进");
+  render();
+}
+function setSel(id){selClient=id;render();}
+function addTouch(){
+  const c=byId(selClient);
+  const ch=document.getElementById("fkCh").value;
+  const date=document.getElementById("fkDate").value||today();
+  const text=document.getElementById("fkText").value.trim();
+  if(!text){toast("请填写跟进要点");return;}
+  c.touches.push({date,ch,type:"跟进",summary:text,result:document.getElementById("fkResult").value});
+  document.getElementById("fkText").value="";
+  toast("✓ 已记录跟进 → 写入时间线");
+  render();
+}
+
+/* ===================== 转化漏斗 ===================== */
+function renderFunnel(){
+  const counts=STAGES.map((_,i)=>CLIENTS.filter(c=>c.funnel===i).length);
+  return `
+  <div class="view-h"><h1>转化漏斗</h1><span class="sub">潜客 → 跟进中 → 接近成交 → 开户 → 购买 → 投资</span></div>
+  <div class="hint"><span class="i">🔻</span><div>展示高潜客户的转化进度。点客户行「推进一档」可模拟状态流转；进入<b>开户/购买/投资</b>即视为已转化，后续移交公司系统管理（文洁口径）。<b>接近成交阶段必须人工对接。</b></div></div>
+  <div class="card" style="margin-bottom:16px">
+    <h3>📊 漏斗全景 <span class="tag">${CLIENTS.length} 名高潜客户</span></h3>
+    ${funnelSegs(false)}
+    <div class="legend">
+      <div class="li"><span class="sw" style="background:#9aa7bd"></span>待跟进</div>
+      <div class="li"><span class="sw" style="background:#265dcc"></span>跟进中</div>
+      <div class="li"><span class="sw" style="background:#315efb"></span>接近成交</div>
+      <div class="li"><span class="sw" style="background:#0b7556"></span>已转化→移交公司</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>👥 客户转化进度 <span class="tag">点击「推进」模拟流转</span></h3>
+    ${CLIENTS.map(c=>{
+      const st=STATUS_OF(c.funnel);
+      return `<div class="fstage-row">
+        <div class="ava" style="background:${STAGE_COLOR[c.funnel]}">${c.name[0]}</div>
+        <div style="flex:1;min-width:150px">
+          <div style="font-weight:700;font-size:13px">${c.name}<span style="font-weight:400;font-size:11.5px;color:var(--muted)"> · ${c.title}</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">画像 ${c.profile.length} 条 · 跟进 ${c.touches.length} 次</div>
+        </div>
+        <div class="fdots">${STAGES.map((s,i)=>`<div class="fd ${i<=c.funnel?'on':''} ${i===c.funnel?'now':''}" style="background:${i<=c.funnel?STAGE_COLOR[i]:'#e4eaf3'}" title="${s}">${i+1}</div>`).join("")}</div>
+        <span class="pill ${STATUS_PILL[st]}" style="min-width:64px;justify-content:center">${st}</span>
+        <button class="btn sm" ${c.funnel>=5?'disabled':''} onclick="advance('${c.id}')">${c.funnel>=5?"已到终点":"推进一档"}</button>
+      </div>`;
+    }).join("")}
+    <div style="font-size:11.5px;color:var(--muted);margin-top:12px">说明：开户 → 购买 → 投资为「已转化」，转化后客户档案与持仓移交公司系统，本工具聚焦新一批高潜客户跟进。</div>
+  </div>
+  <div class="card" style="margin-top:16px;background:#f6f9fe">
+    <h3>📌 漏斗与人工边界</h3>
+    <div class="agent-note">AI 负责：画像整理、事件提醒、话术起草、跟进留痕。<b>人工负责</b>：信任建立、线下见面、开户/购买/投资等关键节点的最终对接。本工具只做「过程管理」，不做数据聚合（私募产品信息无法公开获取）。</div>
+  </div>
+  <div class="foot">漏斗口径：潜客→跟进中→接近成交→开户→购买→投资 · 演示合成数据</div>`;
+}
+function advance(id){
+  const c=byId(id);
+  if(c.funnel>=5)return;
+  c.funnel++;
+  const st=STATUS_OF(c.funnel);
+  toast(`${c.name} 推进至「${STAGES[c.funnel]}」`+(c.funnel>=3?" → 已转化，移交公司系统":""));
+  render();
+}
+
+/* ===================== 使用说明（v1.9 重构 · 纯文本 HTML 阅读区） ===================== */
+function renderGuide(){
+  return `
+  <div class="view-h"><h1>使用说明</h1><span class="sub">理财师工作台 · 高潜客户跟进开发引擎 · 完整手册（纯文本排版，可纵向滚动阅读）</span></div>
+  <div class="hint"><span class="i">📖</span><div>本页为《理财师工作台功能说明与操作手册 v1.0》的<b>纯文本 HTML 排版</b>，内容与原手册逐字一致，仅做排版呈现。原型其余功能（潜客列表 / 画像 / 话术 / 跟进 / 漏斗 / 经验库）与 tab 导航均保留可用。<b>本工具只做高潜客户跟进开发，已成交客户移交公司系统。</b></div></div>
+
+  <div class="doc">
+    <div class="note"><b>阅读前须知</b>：本手册面向理财师 / 客户经理（如文洁），目标是「照着做就会用」。内容严格依据规划与 v1.7 原型编写，不臆造功能；原型与规划存在出入之处，已在手册内标注「以规划为准，原型待更新」。原型为演示用合成数据（mock），开箱即用、无后端；规划为方向性文档。正式落地以监管与公司规定为准。</div>
+
+    <div class="toc">
+      <b>目录</b><br>
+      一、产品是什么 ｜ 二、核心概念（深度解释） ｜ 三、界面与功能地图 ｜ 四、模块操作说明 ｜ 五、数据与合规说明 ｜ 六、试点操作流程（10 人） ｜ 七、常见问题 FAQ ｜ 八、术语表 ｜ 九、边界与免责
+    </div>
+
+    <h2>一、产品是什么</h2>
+
+    <h3>1.1 一句话定位</h3>
+    <p><b>理财师工作台 = 高潜客户跟进开发引擎（非全功能 CRM）。</b></p>
+    <p>它只做一件事：帮理财师跟进、开发潜在客户（高潜客户），直到完成「开户 / 购买（理财）产品 / 投资」。已成交客户回归公司系统管理（文洁口径，详见 1.3）。</p>
+
+    <h3>1.2 给谁用</h3>
+    <ul>
+      <li><b>财富顾问 / 客户经理（如文洁）</b>，个人使用；</li>
+      <li>运营经验（客户画像、沟通路径、话术、知识沉淀）属<b>使用者私有资产</b>，不跨用户共享。</li>
+    </ul>
+
+    <h3>1.3 解决什么痛点（为什么做这个工具）</h3>
+    <table>
+      <tr><th>痛点</th><th>现状</th><th>本工具的解法</th></tr>
+      <tr><td><b>人工记忆靠不住</b></td><td>传统客户管理完全依赖人工记忆：信息流失、跟进不及时、激活方法匹配不当，大量潜力客户跟进中断后「石沉大海」</td><td>事件引擎自动触发（生日 / 人生事件 / 产品到期 / 公司活动），不靠记忆</td></tr>
+      <tr><td><b>eSpace 线索不匹配</b></td><td>现有 eSpace CRM：客户画像维度有限、推送线索匹配度不足，<b>80% 推送线索与客户实际需求不匹配</b>，无法适配个性化运营</td><td>极致细化颗粒度画像 + 场景自动匹配，按客户真实偏好推话术</td></tr>
+      <tr><td><b>已成交客户难管</b></td><td>已成交客户涉及私募等产品数据，合规限制 + 信息不对称，个人工具取不到真实数据</td><td>收敛定位：已成交客户交回公司系统；本工具只做「过程管理」、不做「数据聚合」</td></tr>
+    </table>
+    <div class="sec">文洁原话：「workbuddy 的工作台只适合管理潜在客户。如果是已经成交的客户，公司的工作台跟公司产品系统对接了，管理起来更加方便。现在很多产品都是私募基金，信息是无法从公开渠道获取的，所以 workbuddy 的工作台取不到真实的数据。所以 CRM 这一块，现在有合规限制、有信息不对称的问题，所以不好搞。」<br>→ 据此，本工具<b>只做潜在客户跟进开发</b>，不做全功能 CRM。</div>
+
+    <h3>1.4 AI 只做后端运营的人工边界（最重要的使用前提）</h3>
+    <ul>
+      <li><b>AI 能做的（后端基础运营）</b>：整理画像、识别兴趣点、触发提醒、起草话术、记录跟进、沉淀经验。</li>
+      <li><b>AI 不能做的（必须人工）</b>：
+        <ul>
+          <li>线下饭局获客、当面交换微信等<b>强社交信任积累</b>；</li>
+          <li>高潜客户<b>接近成交关键阶段</b>的最终对接（避免客户感知 AI 服务产生不信任）；</li>
+          <li><b>绝不在客户侧暴露 AI</b>、<b>绝不由 AI 自动读写 / 群发个人微信</b>。</li>
+        </ul>
+      </li>
+    </ul>
+    <p>所有面向客户的内容，必经「生成 → 合规检查 → 人批准 → 人工转发」四步（见 2.2 与第四章 话术模块）。</p>
+
+    <h3>1.5 核心闭环</h3>
+    <pre>画像（个微零散信息挖掘） → 事件/场景触发 → 个性化话术 → 人工跟进 → 转化闭环（开户/购买/投资）</pre>
+
+    <h2>二、核心概念（深度解释）</h2>
+    <div class="note">本节用「通俗类比」帮助第一次使用者建立心智模型。所有概念均来自规划 §2、§11 与 v1.7 原型。</div>
+
+    <h3>2.1 「一个客户一个长期 Agent」（画像底座）</h3>
+    <p><b>是什么</b>：把每个客户的画像，从「一张静态字段表」升级为「一个客户专属长期 Agent 的状态」。这个 Agent 有三个状态：</p>
+    <table>
+      <tr><th>状态</th><th>含义</th><th>在原型中的位置</th></tr>
+      <tr><td><b>🧠 记忆库 Memory</b></td><td>每一条画像要素 = Agent 的一段记忆，必须带「来源可追溯」（源自哪条聊天记录 / 口述 / 截图）</td><td>客户画像页「客户长期 Agent 状态面板 · 记忆库」</td></tr>
+      <tr><td><b>🎯 长期目标 Goals</b></td><td>用「开户 / 购买 / 投资」承载文洁的转化闭环目标，使画像不只是档案，而是「有方向的经营对象」</td><td>同面板「长期目标」三档进度（由漏斗阶段驱动）</td></tr>
+      <tr><td><b>🔒 隔离边界 Isolation</b></td><td>每个客户 Agent 为本地私有实例，对应视频「每个 Agent 自带虚拟机」的隔离思想；但以<b>私有化部署</b>达成（数据不出个人设备），而非真开虚拟机</td><td>同面板「隔离边界 · 本地私有实例」标注</td></tr>
+    </table>
+    <p><b>通俗类比</b>：客户在工具里有一个「<b>永远不遗忘的贴身助手</b>」——你跟他说过的每句话（投资偏好、孩子出国、养的狗叫 Lucky），他都记下来、标好来源和时间，并且只为你一个人服务、不对外泄露。</p>
+    <p><b>验收口径（规划 §11.1）</b>：每位试点客户画像字段 <b>100% 带来源可追溯</b>；每位客户显式维护 <b>≥1 条长期目标</b>；画像数据<b>完整落在本地 / 私有实例</b>，无数据出个人设备。</p>
+
+    <h3>2.2 人在回路 / need help（四步硬性范式）</h3>
+    <p><b>是什么</b>：任何面向客户的内容，必须走四步，且任一步可「need help 转人工」：</p>
+    <pre>① 生成草稿  →  ② 合规检查  →  ③ 人批准  →  ④ 人工转发</pre>
+    <ul>
+      <li>第①、②步可由 AI 完成（生成草稿 + 轻量合规检查）；</li>
+      <li>第③步「人批准」是<b>硬闸门</b>：未过人批准，不得进入转发；</li>
+      <li>第④步「人工转发」必须由你本人复制话术、粘贴到自己个人微信发送；</li>
+      <li>当 AI 无法判断或触及信任 / 成交关键节点，触发 <b>need help</b> 转你（文洁）接管。</li>
+    </ul>
+    <p><b>通俗类比</b>：AI 是「秘书」，把信写好了、合规也自查过，但<b>信封必须你亲手拆、亲手寄</b>；秘书无权替你发任何一句话给客户。</p>
+    <p><b>为什么是硬约束</b>：合规红线（见第五章），非可选优化。客户侧任何触点均由你本人操作，AI 不触达客户。</p>
+
+    <h3>2.3 运营经验自学习自迭代（「复制最优秀的人」）</h3>
+    <p><b>是什么</b>：把<b>你（文洁）自己</b>沉淀的沟通路径 / 话术，复制成可复用的「专家经验」——不是泛化模板，而是对标你历史最优沟通。</p>
+    <ul>
+      <li><b>「最优秀的人」= 使用者本人</b>（个人私有资产视角），而非跨组织复制；</li>
+      <li><b>沉淀物</b>：成功跟进的沟通路径、话术、节奏模板、兴趣识别模式，经人审后进入「我的经验库」可复用；</li>
+      <li>生成话术时自动<b>「参考历史最优沟通」</b>，而非纯泛化模板；</li>
+      <li><b>单次成功跟进须经人审方可沉淀为模板</b>，避免错误经验固化。</li>
+    </ul>
+    <p><b>通俗类比</b>：工具像一面「镜子 + 笔记本」——你每次聊得好的打法，它默默记下来；下次遇到同类客户，它提醒你「上次你这么聊效果最好」。</p>
+    <p><b>验收口径（规划 §11.2）</b>：沉淀若干条<b>经人审的专家经验模板</b>可复用；话术生成能引用历史最优话术作参照；信任 / 成交关键节点 <b>100% 保留人工</b>；专家经验文件属本地 / 私有、无外泄。</p>
+
+    <h3>2.4 关系型经营（四维度）</h3>
+    <p><b>是什么</b>：话术生成与跟进节奏的目标函数，不只盯「转化」，而是四个维度并重：</p>
+    <table>
+      <tr><th>维度</th><th>含义</th><th>话术倾向</th></tr>
+      <tr><td><b>信任积累</b></td><td>先建信任，不急于推产品</td><td>多听少说、长期陪伴</td></tr>
+      <tr><td><b>情绪价值</b></td><td>提供情绪共鸣与陪伴感</td><td>记住客户在意的人与事</td></tr>
+      <tr><td><b>专业服务</b></td><td>体现专业判断与顾问价值</td><td>给结论 + 数据</td></tr>
+      <tr><td><b>转化推进</b></td><td>顺势引导开户 / 购买 / 投资</td><td>明确下一步动作</td></tr>
+    </table>
+    <p><b>通俗类比</b>：高净值客户像「长期朋友」，你不能每次见面只推销；先聊聊他孩子、他爱好，信任够了，事自然成。工具把「关系」也当成 KPI。</p>
+
+    <h3>2.5 极致细化颗粒度画像（来源可追溯）</h3>
+    <p><b>是什么</b>：对客户的投资偏好 / 风险偏好 / 私人信息 / 人生事件 / 兴趣 / 驱动类型，做<b>极致细化颗粒度</b>的映射式记录，<b>每条要素带来源与时间</b>。</p>
+    <table>
+      <tr><th>分类</th><th>内容举例</th></tr>
+      <tr><td>投资偏好</td><td>偏好稳健固收、分红到账拟再投资、定投每月 X 万</td></tr>
+      <tr><td>风险偏好</td><td>原话「钱不求多，稳最重要」、回撤超 20% 会焦虑</td></tr>
+      <tr><td>私人信息</td><td>两个女儿、养金毛叫 Lucky、值夜班多</td></tr>
+      <tr><td>人生事件</td><td>9/15 固收到期、孩子出国、金婚纪念</td></tr>
+      <tr><td>兴趣</td><td>高尔夫、瑜伽、书法、马拉松、慈善</td></tr>
+      <tr><td>驱动类型</td><td>信任驱动 / 规划驱动 / 安全感驱动 / 成长驱动 / 价值驱动 / 专业信任 / 效率驱动 / 结果驱动</td></tr>
+    </table>
+    <p><b>来源可追溯</b>：每条要素标注「来源（聊天记录 / 客户经理录入 / 活动）」+「时间（如 2026-08-20）」。可追溯、可修正、可删除。</p>
+
+    <h2>三、界面与功能地图（首页 tab 导航逐项说明）</h2>
+    <div class="note">原型为左侧「导航栏 + 内容区」结构（浅色风格），所有数据为本机合成数据。v1.8 在首页新增「使用说明」tab 入口（详见 3.1）。</div>
+
+    <h3>3.0 顶部状态栏（所有页面共有）</h3>
+    <ul>
+      <li>左侧面包屑：当前页面名；</li>
+      <li>右侧徽章：「● 合成数据演示」「个人版 · 私有化」；</li>
+      <li>「新手引导」按钮：首次进入自动弹出，可随时重看；</li>
+      <li>右上角头像：「文」（当前使用者 = 文洁）。</li>
+    </ul>
+
+    <h3>3.1 首页 tab 导航（v1.8 新增「使用说明」入口）</h3>
+    <p>v1.8 在首页顶部增加 tab 导航栏：</p>
+    <table>
+      <tr><th>tab</th><th>作用</th></tr>
+      <tr><td>🏠 跟进工作台</td><td>进入 / 停留工作台主视图（v1.7 原有内容）</td></tr>
+      <tr><td>📖 使用说明</td><td>v1.8 新增，进入「使用说明」视图（即本页）</td></tr>
+    </table>
+    <p>同时，「使用说明」也作为左侧导航栏第 7 个 tab 常驻，从任何页面都可一键进入。</p>
+
+    <h3>3.2 左侧导航 tab 总览（6+1 个页面）</h3>
+    <table>
+      <tr><th>#</th><th>tab</th><th>功能一句话</th></tr>
+      <tr><td>1</td><td>🏠 首页 · 工作台</td><td>高潜客户列表 + 今日提醒 + 临期事件 + 漏斗简览 + 6 项核心能力</td></tr>
+      <tr><td>2</td><td>👤 客户画像</td><td>极致颗粒画像 + 来源可追溯 + 三录入入口 + 长期 Agent 状态面板</td></tr>
+      <tr><td>3</td><td>⏰ 事件 / 场景触发</td><td>生日 / 人生事件 / 产品到期 / 活动自动匹配提醒</td></tr>
+      <tr><td>4</td><td>💬 个性化话术</td><td>四步链路（人在回路）+ 关系型经营目标维度 + 参考历史最优</td></tr>
+      <tr><td>5</td><td>📋 跟进记录</td><td>沟通时间线 + 关键节点「必须人工对接」+ 我的经验库</td></tr>
+      <tr><td>6</td><td>🔻 转化漏斗</td><td>潜客→跟进中→接近成交→开户→购买→投资</td></tr>
+      <tr><td>7</td><td>📖 使用说明（v1.8 新增）</td><td>快速上手 / 功能地图 / 核心概念 / 合规红线 / 完整手册入口</td></tr>
+    </table>
+
+    <h3>3.3 首页「6 项核心能力」卡片（功能地图速览）</h3>
+    <p>首页底部「🎯 6 项核心能力（本工具的全部）」卡片，列出全部能力：高潜客户列表与跟进提醒、极致颗粒客户画像、事件/场景触发、个性化话术生成、人工跟进记录、转化漏斗。</p>
+
+    <h2>四、模块操作说明</h2>
+    <div class="note">每个模块给出：功能 / 操作步骤 / 界面元素 / 示例。操作步骤以原型交互为准（演示数据，部分为模拟按钮）。</div>
+
+    <h3>4.1 潜客列表 / 工作台首页</h3>
+    <p><b>功能</b>：统一看板——高潜客户总量、跟进中数量、本周转化、待批准话术、今日提醒、临期事件、客户列表、核心能力地图。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「首页 · 工作台」（默认页）；</li>
+      <li>看顶部 4 张 KPI 卡：高潜客户（试点口径 10 名，演示 8 名）、跟进中、本周转化、待批准话术；</li>
+      <li>看「🔻 转化漏斗（简览）」：点击任意分段可跳漏斗页；</li>
+      <li>看「✅ 今日跟进提醒」「⏰ 临期事件」；</li>
+      <li>在「👥 高潜客户列表」用顶部筛选（全部 / 待跟进 / 跟进中 / 接近成交 / 已转化）过滤；点任一客户卡 → 进入其画像页；</li>
+      <li>看「🤖 AI 能力边界」说明与「📌 本版设计取舍」。</li>
+    </ol>
+    <p><b>界面元素</b>：KPI 卡、漏斗简览（分段可点）、今日提醒列表、临期事件列表、客户卡（含状态 pill、画像要素数、下一步动作）、筛选按钮。</p>
+    <p><b>示例</b>：客户「王总」卡显示：状态「接近成交」、画像要素 7 条、跟进 2 次、漏斗「接近成交」、下一步「固收A 9/15 到期 → 生成重配话术」。点击进入王总画像。</p>
+    <p><b>状态流转</b>：客户状态由「漏斗阶段」推导——待跟进（funnel≤0）/ 跟进中（=1）/ 接近成交（=2）/ 已转化（≥3）。</p>
+
+    <h3>4.2 客户画像页</h3>
+    <p><b>功能</b>：极致细化颗粒度画像；每条要素带来源与时间；三个合规录入入口；「客户长期 Agent 状态面板」（记忆库 / 长期目标 / 隔离边界）。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「👤 客户画像」；默认显示第一位客户（或在首页点客户卡进入指定客户）；</li>
+      <li>看顶部客户信息条 + 「＋ 新增画像要素」「为此客户生成话术 →」按钮；</li>
+      <li>看「🤖 客户长期 Agent 状态面板」三栏：记忆库（N 条记忆）、长期目标（开户/购买/投资进度）、隔离边界（本地私有实例）；</li>
+      <li>看「📊 画像要素分布」「🗂 来源构成」；</li>
+      <li>看「🧬 画像要素（按分类）」六分类列表，每条带来源 pill + 时间；</li>
+      <li>点「＋ 新增画像要素」→ 弹出<b>三入口</b>模态框；</li>
+      <li>（可选）看右侧「🗨 个微聊天零散信息 → 画像」示例、「🧭 驱动类型速览」。</li>
+    </ol>
+    <p><b>三个录入入口（新增画像要素模态框）</b>：</p>
+    <table>
+      <tr><th>入口</th><th>操作</th><th>合规说明</th></tr>
+      <tr><td>📸 截屏 OCR 导入</td><td>点「导入截屏并本地 OCR」模拟 → 识别候选要素 → 勾选 → 批量入库</td><td>自有设备截图 + 本地 OCR，不经第三方解析</td></tr>
+      <tr><td>🎙 口述转述</td><td>在文本框口述客户原话 → 「AI 结构化提取」→ 确认入库</td><td>口述转述 + AI 结构化（存量主路径）</td></tr>
+      <tr><td>✍️ 手动录入</td><td>选分类 / 填内容 / 选来源 → 保存</td><td>人工直接录入</td></tr>
+    </table>
+    <p><b>示例（截屏 OCR）</b>：截王总微信「最近厂里回款到账，你看看有没有合适的」→ 结构化出「投资偏好：分红到账拟再投资 + 时间 2026-08-12 + 来源：聊天记录」→ 自动并入画像。</p>
+    <div class="sec">⚠ <b>原型待更新标注</b>：原型当前在画像页仅演示「口述转述 + 本地 OCR」两条录入路径的 UI；规划 §3.2 的合规导入<b>五路径</b>（含企微会话存档、腾讯官方 ClawBot、官方备份台账）待原型补全。<b>以规划为准，原型待更新。</b></div>
+
+    <h3>4.3 事件 / 场景触发</h3>
+    <p><b>功能</b>：基于画像要素自动提醒跟进时机；公司活动按画像自动匹配客户并生成专属话术。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「⏰ 事件 / 场景触发」；</li>
+      <li>看顶部 4 张事件类型卡：生日 / 人生事件 / 产品到期 / 活动匹配（含审批标注：自动 / 人工）；</li>
+      <li>看「📋 临期事件提醒」列表，用顶部筛选按类型过滤；</li>
+      <li>点「⚡ 模拟触发提醒」中按钮 → 生成跟进待办并提示话术场景；</li>
+      <li>在「🎪 公司活动自动匹配客户」中，点某活动「匹配并生成话术」→ 自动匹配客户并生成专属邀约话术（待人工批准）。</li>
+    </ol>
+    <p><b>界面元素</b>：事件类型卡（含图标 + 审批标注）、临期事件列表、模拟触发按钮、活动卡（含标签 + 匹配输出）。</p>
+    <p><b>示例</b>：活动「高净值客户答谢晚宴」标签 = 企业主/高净值/稳健/家族信托 → 自动匹配 c1（王总）、c5（赵总）、c7、c8，生成「王总，8/30 有一场…需要我为您预留席位吗？」邀约话术。</p>
+    <p><b>合规</b>：产品到期类触发标注「人工」审批；活动邀约话术均「待人工批准」。</p>
+
+    <h3>4.4 个性化话术</h3>
+    <p><b>功能</b>：基于画像 + 场景生成建议草稿；关系型经营目标维度可选；四步链路（人在回路）；need help 转人工；参考历史最优沟通；轻量合规提示。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「💬 个性化话术」；</li>
+      <li>看顶部「🔗 内容生产四步链路」：生成草稿 → 合规检查 → 人批准 → 人工转发，每步有状态，任一步有「need help 转人工」按钮；</li>
+      <li>看红色「⚠ AI 仅后端辅助」横幅（客户侧沟通必须人工）；</li>
+      <li>在「✍️ 生成话术」选客户 + 场景（产品到期重配 / 人生事件关怀 / 活动邀约 / 定期跟进）；</li>
+      <li>勾选「关系型经营目标维度」（信任积累 / 情绪价值 / 专业服务 / 转化推进，可多选）；</li>
+      <li>点「生成话术草稿」→ 草稿出现，带「★ 参考历史最优沟通」badge + 维度提示；</li>
+      <li>在「⏳ 待批准」卡点「✓ 批准」→ 进入「📤 已批准·待人工转发」；点「📤 已人工转发微信」闭环留痕；或点「驳回」改人工当面沟通；</li>
+      <li>看底部「🛡 轻量合规提示」五条红线。</li>
+    </ol>
+    <p><b>四步链路与按钮对应</b>：生成草稿（①）、合规检查（②）点「生成话术草稿」后自动完成，链路进入「人批准（③）进行中」；人批准（③）点「✓ 批准」→ 进入「人工转发（④）」；人工转发（④）点「📤 已人工转发微信」→ 链路闭环留痕；need help 任意步骤点「need help 转人工」→ 转你接管。</p>
+    <p><b>示例</b>：为 c1 生成「产品到期重配」草稿：「王总，您去年配置的稳健固收A将于9月15日到期…准备了两只同风险等级（R2）的方案，需要发您详情吗？」→ 带「★ 参考历史最优沟通」+「信任积累」维度提示。</p>
+    <div class="sec">接近成交（funnel≥2）客户的话术卡会标记「⚠ 接近成交关键节点：必须人工对接发送，避免 AI 代发」。</div>
+
+    <h3>4.5 人工跟进记录</h3>
+    <p><b>功能</b>：记录每次跟进（方式 / 时间 / 要点 / 结果），形成沟通历史时间线；接近成交标记「必须人工对接」；成功跟进可「沉淀为模板」进入「我的经验库」。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「📋 跟进记录」；</li>
+      <li>顶部「👤 跟进对象」切换客户；</li>
+      <li>看「🗓 沟通历史时间线」：每次跟进含日期、方式 pill、类型 pill、要点、结果；接近成交客户的近期记录标「必须人工对接」红 pill；</li>
+      <li>点时间线任一条「🧠 沉淀为模板」→ 进入「我的经验库」；</li>
+      <li>在「＋ 记录一次跟进」表单填方式 / 时间 / 要点 / 结果 → 「保存跟进记录」→ 写入时间线；</li>
+      <li>看「🧠 我的经验库」：模板列表（标题 + 分类 pill + 说明 + 已复用次数），点「复用」同步到当前跟进。</li>
+    </ol>
+    <p><b>示例</b>：王总 2026-08-12 面谈「谈企业分红再投资与传承架构，结果：认可，待出方案」→ 点「沉淀为模板」→ 经验库新增「面谈·谈企业分红…」模板（分类：信任积累）。</p>
+
+    <h3>4.6 转化漏斗</h3>
+    <p><b>功能</b>：展示潜客 → 跟进中 → 接近成交 → 开户 → 购买 → 投资的转化进度；模拟状态流转；已转化移交公司系统。</p>
+    <p><b>操作步骤</b>：</p>
+    <ol>
+      <li>进入「🔻 转化漏斗」；</li>
+      <li>看「📊 漏斗全景」分段；</li>
+      <li>在「👥 客户转化进度」列表，每位客户显示六阶段圆点、状态 pill、推进按钮；</li>
+      <li>点「推进一档」→ 模拟状态流转（funnel+1）；到「开户」即视为已转化，提示「移交公司系统」；</li>
+      <li>看底部「📌 漏斗与人工边界」说明。</li>
+    </ol>
+    <p><b>示例</b>：c7 周总 funnel=5（投资）→ 状态「已转化」→「移交公司系统（不在本工具跟进）」；c8 吴女士 funnel=3（开户）→ 待配置购买。</p>
+    <div class="sec">说明：开户 → 购买 → 投资为「已转化」；转化后客户档案与持仓移交公司系统，本工具聚焦新一批高潜客户跟进（与 1.3 定位一致）。</div>
+
+    <h2>五、数据与合规说明</h2>
+    <div class="note">本节对应规划 §3、§4、§5。深度说明画像数据来源、合规五路径、红线。</div>
+
+    <h3>5.1 画像数据从哪来</h3>
+    <ul>
+      <li><b>绝大多数来自个人微信（个微）聊天记录</b>：对客户投资偏好 / 风险偏好 / 私人信息等 360 度零散信息进行挖掘，建立精细化画像；</li>
+      <li>个微<b>暂未开放数据接口</b>；高净值客户对 AI 介入敏感度极高，<b>直接拉群让 AI 旁听会引发反感</b> → 因此走「人工供给 + 本地解析」而非自动旁听；</li>
+      <li>数据层以人工供给 + 本地解析为主，<b>不做外部数据聚合</b>（私募产品数据不可公开获取 + 合规限制）。</li>
+    </ul>
+
+    <h3>5.2 合规导入五路径（规划 §3.2，当前推荐）</h3>
+    <table>
+      <tr><th>#</th><th>路径</th><th>适用</th><th>合规依据</th></tr>
+      <tr><td>①</td><td><b>企微会话存档 + 本地 AI（主干）</b></td><td>客户沟通迁企微，授权后官方 API 拉取/解密/存储，本地 LLM 做画像/话术</td><td>官方原生能力；外部联系人含个微客户；满足券商/私募留痕监管口径</td></tr>
+      <tr><td>②</td><td><b>口述转述 + AI 结构化（存量）</b></td><td>存量个微记录，客户经理授权内录入沟通要点，AI 聚类生成画像字段</td><td>数据源为客户经理自述要点而非微信数据本体；最小必要 + 知情同意 + 私有化</td></tr>
+      <tr><td>③</td><td><b>自有设备截图 + 本地 OCR（存量）</b></td><td>本人对话截图，本地 OCR + 本地 LLM 结构化，人审后入本地知识库</td><td>自持内容本地处理不出设备；配水印与访问审计</td></tr>
+      <tr><td>④</td><td><b>腾讯官方 ClawBot + 本地 OpenClaw（新增会话）</b></td><td>新增互动会话，扫码授权接入本地 OpenClaw</td><td>腾讯官方 2026-03-22 发布；不读历史记录/通讯录、不上传文件，本地自持；局限：只解决新会话</td></tr>
+      <tr><td>⑤</td><td><b>官方备份 + 凭证台账（兜底）</b></td><td>官方「备份与恢复」定期加密备份关键会话，建「时间/范围/归档人」台账</td><td>保证原始记录完整可追溯，满足「未删改原始记录」检查口径；加密凭证不可直接喂 AI</td></tr>
+    </table>
+    <div class="sec">⚠ <b>原型待更新标注</b>：v1.7 原型 UI 当前仅完整演示路径 ②（口述转述）与 ③（本地 OCR）的录入交互；路径 ①（企微会话存档）、④（ClawBot）、⑤（官方备份台账）在原型中尚未提供入口，<b>以规划为准，原型待更新</b>。</div>
+
+    <h3>5.3 红线清单（机构生产禁用 / 必守）</h3>
+    <table>
+      <tr><th>红线</th><th>说明</th><th>依据</th></tr>
+      <tr><td><b>PyWxDump 类解密工具禁用</b></td><td>本地库解密导出属灰色地带、违反用户协议；PyWxDump 已于 2025-10-20 收微信官方律师函并删库，机构生产不建议采用</td><td>规划 §3.3</td></tr>
+      <tr><td><b>Hook 机器人 / 协议模拟禁用</b></td><td>WeChatFerry、wechaty 个微通道、pc-wechat-hook、itchat 等违反协议明令禁止条款，封号风险高</td><td>规划 §3.3</td></tr>
+      <tr><td><b>无授权第三方解析禁用</b></td><td>未授权第三方「解析/代抓」服务属违规、数据出境风险高</td><td>规划 §3.3</td></tr>
+      <tr><td><b>不分析他人记录</b></td><td>未经同意获取/分析客户、同事聊天记录，违反《个人信息保护法》与用户协议</td><td>规划 §3.3</td></tr>
+      <tr><td><b>个微不 AI 旁听</b></td><td>个微场景高净值客户对 AI 介入敏感度高，直接拉群让 AI 旁听会引发反感</td><td>规划 §4</td></tr>
+      <tr><td><b>数据不出个人设备</b></td><td>高净值原始数据不出私网；私有化部署；运营经验属使用者私有</td><td>规划 §5</td></tr>
+      <tr><td><b>人在回路硬闸门</b></td><td>面向客户内容必经「生成→合规检查→人批准→人工转发」，AI 不自动读写/群发个微</td><td>规划 §4、§11.3</td></tr>
+    </table>
+    <p><b>采集原则</b>：最小必要 + 知情同意 + 可删除；输出画像脱敏（去手机号 / 身份信息）；敏感字段加密；定期备份并建台账。</p>
+    <p><b>话术合规五提示（原型内置）</b>：不荐股 / 不荐具体证券；不承诺收益；适当性前置（话术风险等级 ≤ 客户风险偏好）；风险提示义务；私募不晒收益 / 测评不外泄。</p>
+
+    <h3>5.4 部署与数据安全</h3>
+    <ul>
+      <li><b>私有化 / 本地化部署为主</b>：避免客户信息、运营策略等私有资产泄露；不使用公司办公系统存储相关数据；</li>
+      <li><b>可选</b>：阿里云等第三方服务器 + 个人设备（手机 / 个人电脑）远程访问，公司设备不留痕；</li>
+      <li>AI 推理优先本地模型 / 私有化 API；输出画像脱敏；敏感字段加密；定期备份（本地 / 私有云）建台账。</li>
+    </ul>
+
+    <h2>六、试点操作流程（10 人）</h2>
+    <div class="note">对应规划 §2.4、§8（Phase 0–4）。从录入画像 → 触发跟进 → 话术生成 → 人工跟进 → 效果度量。</div>
+
+    <h3>6.1 试点对象与口径</h3>
+    <ul>
+      <li><b>10 名存量高潜客户</b>；原型演示造 8 名（c1–c8），试点口径以 10 名为准；</li>
+      <li>目标：验证客户管理效率与转化效果的实际提升；跑通后扩大覆盖。</li>
+    </ul>
+
+    <h3>6.2 完整操作路径（照着做）</h3>
+    <p><b>Phase 0 · 试点准备</b></p>
+    <ol>
+      <li>选定 10 名存量高潜客户名单；</li>
+      <li>为每位客户明确画像导入方式（口述转述 / 截图 OCR / 企微存档）；</li>
+      <li>建立私有化本地数据环境（数据不出个人设备）。</li>
+    </ol>
+    <p><b>Phase 1 · 画像底座</b></p>
+    <ol start="4">
+      <li>打开「👤 客户画像」，对每位客户点「＋ 新增画像要素」；</li>
+      <li>用<b>三入口</b>录入：截屏 OCR（存量聊天）、口述转述（当面/电话要点）、手动录入（已知信息）；</li>
+      <li>核对每条要素<b>带来源 + 时间</b>（记忆库可追溯）；</li>
+      <li>在「客户长期 Agent 状态面板」确认每位客户 ≥1 条长期目标（开户/购买/投资）。</li>
+    </ol>
+    <p><b>Phase 2 · 跟进引擎</b></p>
+    <ol start="8">
+      <li>打开「⏰ 事件 / 场景触发」：看临期事件；</li>
+      <li>点「模拟触发」演练；对公司活动点「匹配并生成话术」自动生成专属邀约；</li>
+      <li>打开「💬 个性化话术」：选客户 + 场景 + 关系型目标维度 → 生成草稿；</li>
+      <li>走四步链路：生成草稿 → 合规检查 → <b>你点「批准」</b> → <b>你人工转发个人微信</b>；卡住点「need help 转人工」。</li>
+    </ol>
+    <p><b>Phase 3 · 人工跟进（关键）</b></p>
+    <ol start="12">
+      <li>打开「📋 跟进记录」：每次沟通后「＋ 记录一次跟进」；</li>
+      <li>接近成交客户：时间线标记「必须人工对接」，关键节点你本人面谈/电话，AI 不代发；</li>
+      <li>成功跟进点「🧠 沉淀为模板」进入「我的经验库」。</li>
+    </ol>
+    <p><b>Phase 4 · 转化与度量</b></p>
+    <ol start="15">
+      <li>打开「🔻 转化漏斗」：点「推进一档」模拟流转；到「开户」即已转化 → 移交公司系统；</li>
+      <li>度量指标：跟进及时率、话术批准率、接近成交人工对接率、转化数；关系经营指标（客户回应质量、信任信号）纳入评测，不单纯以成交为唯一 KPI。</li>
+    </ol>
+
+    <h3>6.3 注意事项</h3>
+    <ul>
+      <li><b>绝不在客户侧暴露 AI</b>：所有外发内容由你本人复制粘贴发送；</li>
+      <li><b>接近成交必人工</b>：funnel≥2 客户的关键节点，AI 仅记录与提醒，不代发；</li>
+      <li><b>来源可追溯</b>：每条画像要素可修正、可删除，发现错误立即改；</li>
+      <li><b>合规优先</b>：走五路径，禁用 PyWxDump / Hook / 无授权第三方解析；</li>
+      <li><b>经验私有</b>：沉淀模板属你本人，不外泄、不跨用户共享。</li>
+    </ul>
+
+    <h2>七、常见问题 FAQ</h2>
+    <p><b>Q1：客户信息怎么录入最省力？</b><br>用「客户画像 → ＋ 新增画像要素」的<b>三入口</b>：① 截屏 OCR——把个微聊天截图导入，本地 OCR 自动识别候选要素，勾选入库；② 口述转述——把客户当面/电话说的话口述出来，AI 结构化提取；③ 手动录入——已知信息直接填。最省力是<b>截屏 OCR + 口述转述</b>（存量），企微客户可用会话存档自动同步（规划路径①）。</p>
+    <p><b>Q2：AI 生成的话术能直接发吗？</b><br><b>不能</b>。话术是「建议草稿」，必经「生成 → 合规检查 → <b>人批准</b> → <b>人工转发</b>」四步。你点「批准」后，需自己复制话术、粘贴到个人微信发送。AI 绝不自动读写 / 群发个微。任一步可「need help 转人工」。</p>
+    <p><b>Q3：私募数据取不到怎么办？</b><br>本工具<b>不做数据聚合</b>，私募产品信息无法从公开渠道获取（文洁口径）。工具只做「过程管理」：画像、触发、话术、跟进、转化闭环。已成交客户（含私募持仓）回归公司系统管理。</p>
+    <p><b>Q4：手机能用吗？</b><br>原型为响应式 Web（窄屏自动转为顶部横向导航），手机浏览器可看；规划含 PWA（自用主力）+ 微信 H5 只读分享页。正式部署可在个人手机 / 个人电脑远程访问私有化实例（公司设备不留痕）。</p>
+    <p><b>Q5：客户聊天记录怎么导入才合规？</b><br>走合规五路径：企微会话存档（主干）/ 口述转述 / 自有设备截图+本地 OCR / 腾讯官方 ClawBot（新会话）/ 官方备份台账（兜底）。<b>禁用</b> PyWxDump 类解密、Hook 机器人、无授权第三方解析。<b>个微不 AI 旁听</b>（不拉群让 AI 听）。</p>
+    <p><b>Q6：十个客户够吗？演示怎么只有 8 个？</b><br>试点口径为 <b>10 名存量高潜客户</b>；原型演示造 8 名（c1–c8）仅为展示。跑通后扩大覆盖。</p>
+    <p><b>Q7：「一个客户一个长期 Agent」是什么？要开虚拟机吗？</b><br>是一种<b>画像底座隐喻</b>：把客户画像看作「客户专属长期 Agent 的状态」——记忆库（可追溯要素）/ 长期目标（开户购买投资）/ 隔离边界（本地私有实例）。<b>不需要真开虚拟机</b>，隔离由私有化部署达成（数据不出个人设备）。</p>
+    <p><b>Q8：话术生成选了「关系型经营目标维度」有什么用？</b><br>勾选信任积累 / 情绪价值 / 专业服务 / 转化推进（可多选）后，生成话术会按所选维度给对应提示，体现「关系型经营」而非只盯转化（如「先建信任、不急于推产品」）。</p>
+    <p><b>Q9：什么是「参考历史最优沟通」？</b><br>生成话术时自动标注「★ 参考历史最优沟通」，即引用你（文洁）历史最优沟通路径作参照（P0-2 复制最优秀的人=复制你自己），而非纯泛化模板。</p>
+    <p><b>Q10：我的运营经验会泄露吗？</b><br>不会。运营经验（画像、话术、沟通路径）属<b>使用者私有资产</b>；私有化 / 本地化部署，数据不出个人设备，不跨用户共享。</p>
+
+    <h2>八、术语表</h2>
+    <table>
+      <tr><th>术语</th><th>含义</th></tr>
+      <tr><td>高潜客户</td><td>潜在、有开发价值的客户（非已成交）；本工具唯一管理对象</td></tr>
+      <tr><td>跟进开发引擎</td><td>本工具定位：只做高潜客户跟进开发，非全功能 CRM</td></tr>
+      <tr><td>长期 Agent</td><td>客户画像底座隐喻：记忆库 + 长期目标 + 隔离边界</td></tr>
+      <tr><td>记忆库 Memory</td><td>客户全部画像要素（带来源 + 时间）</td></tr>
+      <tr><td>长期目标 Goals</td><td>开户 / 购买 / 投资 三档转化进度</td></tr>
+      <tr><td>隔离边界 Isolation</td><td>本地私有实例，数据不出个人设备</td></tr>
+      <tr><td>人在回路</td><td>面向客户内容必经人批准 + 人工转发，AI 不代发</td></tr>
+      <tr><td>need help</td><td>任一步卡住时转人工（你）接管的按钮 / 机制</td></tr>
+      <tr><td>关系型经营</td><td>话术目标四维度：信任积累 / 情绪价值 / 专业服务 / 转化推进</td></tr>
+      <tr><td>极致细化颗粒度</td><td>画像六分类（投资/风险/私人/人生事件/兴趣/驱动）逐条记录</td></tr>
+      <tr><td>来源可追溯</td><td>每条画像要素标注来源（聊天记录/录入/活动）+ 时间</td></tr>
+      <tr><td>合规五路径</td><td>企微存档 / 口述转述 / 本地 OCR / ClawBot / 官方备份台账</td></tr>
+      <tr><td>我的经验库</td><td>成功跟进沉淀的可复用模板（P0-2 自学习自迭代）</td></tr>
+      <tr><td>转化漏斗</td><td>潜客→跟进中→接近成交→开户→购买→投资</td></tr>
+      <tr><td>已转化 / 移交公司</td><td>funnel≥3（开户起），客户交回公司系统管理</td></tr>
+      <tr><td>Mock 数据</td><td>原型演示用的合成数据，非真实客户</td></tr>
+    </table>
+
+    <h2>九、边界与免责</h2>
+    <ol>
+      <li><b>原型为演示（mock 数据）</b>：理财师工作台原型全部为合成数据，开箱即用、无后端；仅用于演示交互与功能，不代表真实客户或真实数据。</li>
+      <li><b>规划为方向</b>：落地规划为当前推荐规划，含演进方向（agent 化、ClawBot 通道、多 Agent 编排），<b>不承诺当期实现</b>；具体算力、价格、政策等见规划「待核验清单」。</li>
+      <li><b>合规红线以监管与公司规定为准</b>：本文档第五章红线与话术合规提示为方法论参考；正式展业须遵守《个人信息保护法》、中证协 / 私募监管最新规定及所在机构制度。</li>
+      <li><b>视频引用边界</b>：规划四条 P0 源自 a16z×Kavak 视频分析，Kavak 数字为公司自述、a16z 利益关联、无第三方核验，仅作方法论参考；ASR 转写无字幕轨、部分词可能不准，不可作逐字稿。</li>
+      <li><b>定位边界</b>：本工具只做高潜客户跟进开发的「过程管理」，不做全功能 CRM、不做数据聚合；已成交客户回归公司系统。</li>
+      <li><b>版本纪律</b>：原型每迭代出新版本号；本文档 v1.0 对应原型 v1.8，配套规划 v1.3。</li>
+    </ol>
+
+    <div class="note">本手册依据 2026-08-21 工作区材料整合编写。凡原型与规划出入处，已在本手册标注「以规划为准，原型待更新」。完整操作手册见《理财师工作台功能说明与操作手册_v1.0》（即本文件）。</div>
+  </div>
+  <div class="foot">理财师工作台 v1.9 · 使用说明（纯文本 HTML） · 演示合成数据 · 数据仅存个人设备 · 私有化部署</div>`;
+}
+
+/* ===================== 新手引导 ===================== */
+const WSTEPS=[
+  {t:"欢迎使用 v1.7 高潜跟进版",d:"这是你的<b>高潜客户跟进开发引擎</b>：只做一件事——帮你跟进开发潜在客户。已成交客户交给公司系统。核心闭环：<b>画像 → 事件触发 → 话术 → 人工跟进 → 转化</b>。本版新增 P0×4：客户长期 Agent 状态面板、我的经验库、四步链路（need help 转人工）、关系型经营目标维度。本原型为<b>合成数据演示，开箱即用，无需后端</b>。"},
+  {t:"三分钟看懂（重点看这页）",d:"① <b>客户画像</b>：把个微聊天里的零散信息挖成可追溯的画像要素（三个合规录入入口）；② <b>事件触发</b>：生日/人生事件/到期/活动自动提醒；③ <b>话术</b>：AI 起草 → 合规提示 → 你批准 → 人工转发。接近成交必须人工对接。"},
+  {t:"从哪里开始",d:"建议：首页看今日提醒 → 打开一位客户补画像要素 → 到事件页模拟一次活动匹配 → 话术页批准一条草稿 → 记录一次跟进。点右上角「新手引导」可随时重看。"}
+];
+let wsIdx=0;
+function openWelcome(){
+  wsIdx=0;
+  document.getElementById("modalHost").innerHTML=`<div class="mask" onclick="if(event.target===this)closeWelcome()"><div class="modal">
+    <div class="mh"><div class="mt" id="wsT"></div><div class="ms" id="wsS"></div></div>
+    <div class="mb"><div class="steps" id="wsSteps"></div><div class="wstep" id="wsBody"></div></div>
+    <div class="mf"><button class="btn ghost" onclick="closeWelcome()">跳过</button><button class="btn" id="wsNext" onclick="wsNext()">下一步</button></div>
+  </div></div>`;
+  renderWelcome();
+}
+function renderWelcome(){
+  document.getElementById("wsT").textContent=WSTEPS[wsIdx].t;
+  document.getElementById("wsS").textContent=`第 ${wsIdx+1} / ${WSTEPS.length} 步`;
+  document.getElementById("wsSteps").innerHTML=WSTEPS.map((_,i)=>`<div class="s ${i<=wsIdx?'on':''}"></div>`).join("");
+  document.getElementById("wsBody").innerHTML=`<div class="wd">${WSTEPS[wsIdx].d}</div>`;
+  document.getElementById("wsNext").textContent=wsIdx===WSTEPS.length-1?"开始体验":"下一步";
+}
+function wsNext(){if(wsIdx<WSTEPS.length-1){wsIdx++;renderWelcome();}else closeWelcome();}
+function closeWelcome(){document.getElementById("modalHost").innerHTML="";}
+
+/* ===================== 启动 ===================== */
+renderNav();
+go("home");
+setTimeout(openWelcome,500);
+</script>
+</body>
+</html>
